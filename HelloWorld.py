@@ -1,18 +1,20 @@
 from bottle import route, run, template, Response, request, view
+import operator
+from collections import OrderedDict
 
 topOccurences = dict()
 
 
 @route('/')
 def index():
-    return template('index')
+    return displayTopTwenty()
+
 
 
 @route('/', method='POST')
-#@view('object.tpl')
 def doCounting():
     searchSentence = request.forms.get('search')
-
+    searchSentence = searchSentence.lower()
     occurences = countNumberOfWords(searchSentence)
     print (occurences)
     return template('object', occurences=occurences)
@@ -33,18 +35,21 @@ def countNumberOfWords(sentence):
         else:
             topOccurences[word] += 1
 
-    result = sorted(topOccurences.items(), key=lambda t: t[1], reverse=True)
-    print("printing result now")
-    for k, v in result:
-        print(k, v)
+
     print("occurences in funcion are ", occurences)
     return occurences
 
+def displayTopTwenty():
 
-@route('/querytest')
-def querytest():
-    param1 = request.query.param1
-    param2 = request.query.param2
+
+    topTwenty = sorted(topOccurences.items(), key=lambda t:t[1], reverse=True)
+
+
+    print("top twenty is: ", topTwenty)
+    sortedTopTwentyDictionary = dict((topTwenty)[:20])
+    print("printing dictionary", sortedTopTwentyDictionary)
+    return template('index', sortedTopTwentyDictionary=sortedTopTwentyDictionary)
+
 
 
 if __name__ == '__main__':
