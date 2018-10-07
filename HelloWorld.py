@@ -55,21 +55,3 @@ def displayTopTwenty():
 if __name__ == '__main__':
     run(host='localhost', port=8080, debug=False, reloader=True)
 
-'''
-<!DOCTYPE=HTML>
-        <form action="/login" method="post">
-           <input name="Search" type="text" />
-
-            <input value="Search" type="submit" />
-        </form>
-
-@route('/', method='POST')
-def do_login():
-    username = request.forms.get('username')
-    password = request.forms.get('password')
-    if check_login(username, password):
-        return "<p>Your login information was correct.</p>"
-    else:
-        return "<p>Login failed.</p>"
-run(host='localhost', port=9090, debug=True)
-'''
