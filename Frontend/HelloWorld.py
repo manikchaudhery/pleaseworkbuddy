@@ -1,11 +1,15 @@
-from bottle import route, run, template, Response, request, view, static_file
+from bottle import route, run, template, Response, request, view, static_file, get, post
+
 import operator
 from collections import OrderedDict
 
 topOccurences = dict()
 
+@get('/')
+def getMethod():
+    return template('object')
 
-@route('/', method="POST")
+@post('/')
 def index():
 
     occurences = dict()
@@ -25,7 +29,7 @@ def index():
         sortedTopTwentyDictionary = dict((topTwenty)[:20])
         print("printing dictionary", sortedTopTwentyDictionary)
     picture_name = "logo_transparent.png"
-    return template('index', occurences=occurences, sortedTopTwentyDictionary=sortedTopTwentyDictionary, picture=picture_name)
+    return template('index', occurences=occurences, sortedTopTwentyDictionary=sortedTopTwentyDictionary, picture=picture_name, searchSentence=searchSentence)
 
 @route('/static/<filename>')
 def server_static(filename):
@@ -51,18 +55,6 @@ def countNumberOfWords(sentence):
 
     print("occurences in funcion are ", occurences)
     return occurences
-
-def displayTopTwenty():
-
-
-    topTwenty = sorted(topOccurences.items(), key=lambda t:t[1], reverse=True)
-
-
-    print("top twenty is: ", topTwenty)
-    sortedTopTwentyDictionary = dict((topTwenty)[:20])
-    print("printing dictionary", sortedTopTwentyDictionary)
-    picture_name = "logo_transparent.png"
-    return template('index', sortedTopTwentyDictionary=sortedTopTwentyDictionary, picture=picture_name)
 
 
 
