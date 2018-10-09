@@ -13,6 +13,8 @@ def index():
 def server_static(filename):
     return static_file(filename, root='./views/myfiles')
 
+
+
 @route('/', method='POST')
 def doCounting():
     searchSentence = request.forms.get('search')
@@ -50,10 +52,10 @@ def displayTopTwenty():
     print("top twenty is: ", topTwenty)
     sortedTopTwentyDictionary = dict((topTwenty)[:20])
     print("printing dictionary", sortedTopTwentyDictionary)
-    return template('index', sortedTopTwentyDictionary=sortedTopTwentyDictionary)
+    picture_name = "logo_transparent.png"
+    return template('index', sortedTopTwentyDictionary=sortedTopTwentyDictionary, picture=picture_name)
 
 
 
 if __name__ == '__main__':
     run(host='localhost', port=8080, debug=False, reloader=True)
-
