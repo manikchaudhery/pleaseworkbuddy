@@ -1,0 +1,11 @@
+For Backend: 
+Website:
+Go to your project directory and run ".py". 
+Then open http://localhost:8080/ on your browser.
+
+Testing Crawler
+Go to your project directory and run "test_cases.py".
+
+For Frontend:
+1) Download the csc326 folder.
+2) cd to Frontend folder and run python HelloWorld.py
