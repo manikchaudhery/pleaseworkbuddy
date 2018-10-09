@@ -1,63 +1,59 @@
-from bottle import route, run, template, Response, request
+from bottle import route, run, template, Response, request, view, static_file
+import operator
+from collections import OrderedDict
+
 topOccurences = dict()
+
+
 @route('/')
 def index():
-	return template('index')
+    return displayTopTwenty()
+
+@route('/static/<filename>')
+def server_static(filename):
+    return static_file(filename, root='./views/myfiles')
 
 @route('/', method='POST')
 def doCounting():
     searchSentence = request.forms.get('search')
-    print(countNumberOfWords(searchSentence))
-    
+    searchSentence = searchSentence.lower()
+    occurences = countNumberOfWords(searchSentence)
+    print (occurences)
+    return template('object', occurences=occurences)
+
 
 def countNumberOfWords(sentence):
-	wordsArray = sentence.split()
-	occurences = dict()
-	
+    wordsArray = sentence.split()
+    occurences = dict()
 
-	for word in wordsArray:
-		if word not in occurences:
-			occurences[word] = 1
-		else: 
-			occurences[word] += 1
+    for word in wordsArray:
+        if word not in occurences:
+            occurences[word] = 1
+        else:
+            occurences[word] += 1
 
-		if word not in topOccurences:
-			topOccurences[word] = 1
-		else: 
-			topOccurences[word] += 1	
-	
-	result = sorted(topOccurences.items() , key=lambda t : t[1] , reverse=True)
-	print("printing result now")
-	for k,v in result:
-		print(k,v)
-	return template('object', occurences = occurences)
-	
+        if word not in topOccurences:
+            topOccurences[word] = 1
+        else:
+            topOccurences[word] += 1
 
 
-@route('/querytest')
-def querytest():
-	param1 = request.query.param1
-	param2 = request.query.param2
+    print("occurences in funcion are ", occurences)
+    return occurences
+
+def displayTopTwenty():
+
+
+    topTwenty = sorted(topOccurences.items(), key=lambda t:t[1], reverse=True)
+
+
+    print("top twenty is: ", topTwenty)
+    sortedTopTwentyDictionary = dict((topTwenty)[:20])
+    print("printing dictionary", sortedTopTwentyDictionary)
+    return template('index', sortedTopTwentyDictionary=sortedTopTwentyDictionary)
+
+
 
 if __name__ == '__main__':
+    run(host='localhost', port=8080, debug=False, reloader=True)
 
-	run(host='localhost', port=3006, debug=False, reloader = True)
-
-'''
-<!DOCTYPE=HTML>
-        <form action="/login" method="post">
-           <input name="Search" type="text" />
-            
-            <input value="Search" type="submit" />
-        </form>
-
-@route('/', method='POST')
-def do_login():
-    username = request.forms.get('username')
-    password = request.forms.get('password')
-    if check_login(username, password):
-        return "<p>Your login information was correct.</p>"
-    else:
-        return "<p>Login failed.</p>"
-run(host='localhost', port=9090, debug=True)
-'''
