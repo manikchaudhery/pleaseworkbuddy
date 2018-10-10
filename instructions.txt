@@ -1,11 +1,16 @@
-For Backend: 
-Website:
-Go to your project directory and run ".py". 
-Then open http://localhost:8080/ on your browser.
-
-Testing Crawler
-Go to your project directory and run "test_cases.py".
 
 For Frontend:
-1) Download the csc326 folder.
-2) cd to Frontend folder and run python HelloWorld.py
+
+The HelloWorld.py is the file that contains the logic for the frontend part of the lab.
+The views folder contains the templates for rendering.
+
+1) cd to "Frontend" folder in the project.
+2) run python HelloWorld.py
+3) Then open http://localhost:8080/ on your web browser 
+4) Enter your query string and you will see the results and the top twenty words under the hostory table since the server has started.
+
+For Backend (Testing Crawler):
+1) cd to "backend" folder and run "test_cases.py".
+2) The command will run the test cases and display results.
+
+
