@@ -7,9 +7,12 @@
 </head>
 
 <div class="text-center">
-	<img src="static/logo_transparent.jpg" height="200" width="200">
+    <h3> Welcome {{user_email}} </h3>
+    <img src="static/logo_transparent.jpg" height="200" width="200">
+    <br><a href="http://localhost:8080/logout"><button id="logout" type="button" class="btn">Log Out</button></a>
+
 </div>
-<form action="/" method="post" class="col-lg-6 offset-lg-3 ">
+<form action="/redirect" method="post" class="col-lg-6 offset-lg-3 ">
 	<div class="row justify-content-center">
 		<input name="search" type="text" placeholder="Enter query" />
 		<span class="input-group-btn">
@@ -35,7 +38,21 @@
 				% end
 			</table>
 	</div>
-</div>
-<div>
-    <a href="http://localhost:8080/login"><button id="login" type="button" class="btn">Log In</button></a>
+	<div class="col-md-2"></div>
+	<div class="col-md-4">
+		<h2 class="text-center">History</h2>
+		<table class="table table-hover table-dark">
+			<tr>
+				<th>Word</th>
+				<th>Frequency</th>
+		  	</tr>
+			% for item in sortedTopTwentyDictionary:
+				<tr>
+					<td>{{item[0]}}</td>
+					<td>{{item[1]}}</td>
+				</tr>
+			% end
+		</table>
+	<div class="col-md-1"></div>
+	</div>
 </div>

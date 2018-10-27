@@ -8,11 +8,11 @@
 
 <div class = text-center>
 	<img src="static/logo_transparent.jpg" height="200" width="200">
-	<a href="http://localhost:8080/login"><button id="login" type="button" class="btn">Log In</button></a>
+	<h3> Welcome {{user_email}}! </h3>
 </div>
 
 
-<form action="/" method="post" class="col-lg-6 offset-lg-3 ">
+<form action="/redirect" method="post" class="col-lg-6 offset-lg-3 ">
 	<div class="row justify-content-center">
 		<input name="search" type="text" placeholder="Enter query" />
 		<span class="input-group-btn">
@@ -20,3 +20,7 @@
 		</span>
 	</div>
 </form>
+
+<div>
+       <a href="http://localhost:8080/logout"><button id="logout" type="button">Log Out</button></a>
+</div>
