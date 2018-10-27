@@ -8,7 +8,7 @@
 
 <div class = text-center>
 	<img src="static/logo_transparent.jpg" height="200" width="200">
-	<a href="http://localhost:8080/login"><button id="login" type="button" class="btn">Log In</button></a>
+	<a href="http://0.0.0.0:8080/login"><button id="login" type="button" class="btn">Log In</button></a>
 </div>
 
 
