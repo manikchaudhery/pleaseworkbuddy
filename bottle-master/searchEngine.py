@@ -181,7 +181,7 @@ def logout():
     global userSignedIn
     userSignedIn = False
 
-    bottle.redirect("http://localhost:8080")
+    bottle.redirect("http://0.0.0.0:8080")
 
 # enables search engine logo to be displayed
 @route('/static/<filename>')
