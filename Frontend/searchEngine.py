@@ -31,6 +31,7 @@ def getMethod():
     global userSignedIn
     global counter
 
+
     if userSignedIn:
         counter += 1
         print(counter)
@@ -39,57 +40,6 @@ def getMethod():
     # if user is already logged in
     userSignedIn = True
     return template("object")
-
-#following oauth google documentation
-@get('/login')
-def login():
-    global userSignedIn
-    userSignedIn = True
-
-    flow = flow_from_clientsecrets("client_secret.json",
-                                   redirect_uri="http://localhost:8080/redirect",
-                                   scope='https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email'
-                                   )
-    uri = flow.step1_get_authorize_url()
-    bottle.redirect(str(uri))
-
-#user gets here when logged in
-@get('/redirect')
-def redirect_page():
-    global userSignedIn
-
-    if not userSignedIn:
-        bottle.redirect("http://localhost:8080")
-    code = request.query.get('code', '')
-
-    # following oauth documentation on google api
-    code = request.query.get('code', '')
-    client_id = "800514716960-q9rs6rdrsb9e2d5f1u8vcqtfi7lft009.apps.googleusercontent.com"
-    client_secret = "Ameck7tpvFW65NVtMsQ1zTTV"
-    scope = 'https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email'
-
-    flow = OAuth2WebServerFlow(client_id=client_id, client_secret=client_secret, scope=scope,
-                               redirect_uri="http://localhost:8080/redirect")
-    credentials = flow.step2_exchange(code)
-    token = credentials.id_token['sub']
-
-    response.set_cookie("token", str(token))  # store token
-
-    http = httplib2.Http()
-    http = credentials.authorize(http)
-
-    # Retrieving the user email
-    users_service = build('oauth2', 'v2', http=http)
-    user_document = users_service.userinfo().get().execute()
-    user_email = user_document['email']
-
-    # saving the user's email
-    response.set_cookie("email", str(user_email))
-
-    #template returns the display
-
-    return template("loggedIn", user_email=user_email)
-
 
 # this method enables the counting of words in results
 @post('/')
@@ -117,6 +67,65 @@ def index():
 
     return template('index', occurences=occurencesList,
                     picture=picture_name, searchSentence=searchSentence)
+
+
+#following oauth google documentation
+@get('/login')
+def login():
+    global userSignedIn
+    userSignedIn = True
+
+    flow = flow_from_clientsecrets("client_secret.json",
+                                   redirect_uri="http://localhost:8080/redirect",
+                                   scope='https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email'
+                                   )
+    uri = flow.step1_get_authorize_url()
+    bottle.redirect(str(uri))
+
+#user gets here when logged in
+@get('/redirect')
+def redirect_page():
+    global userSignedIn
+
+    if not userSignedIn:
+        bottle.redirect("http://localhost:8080")
+    code = request.query.get('code', '')
+
+
+    with open('client_secret.json') as json_data:
+        data = json.load(json_data)
+
+
+
+    # following oauth documentation on google api
+    code = request.query.get('code', '')
+    client_id = data['web']['client_id']
+    client_secret =  data['web']['client_secret']
+    scope = 'https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email'
+
+    flow = OAuth2WebServerFlow(client_id=client_id, client_secret=client_secret, scope=scope,
+                               redirect_uri="http://localhost:8080/redirect")
+    credentials = flow.step2_exchange(code)
+    token = credentials.id_token['sub']
+
+    response.set_cookie("token", str(token))  # store token
+
+    http = httplib2.Http()
+    http = credentials.authorize(http)
+
+    # Retrieving the user email
+    userService = build('oauth2', 'v2', http=http)
+    userDocument = userService.userinfo().get().execute()
+    userEmail = userDocument['email']
+
+    # saving the user's email
+    response.set_cookie("email", str(userEmail))
+
+    #template returns the display
+
+    return template("loggedIn", user_email=userEmail)
+
+
 
 @post('/redirect')
 def displayResults():
@@ -164,13 +173,14 @@ def displayResults():
 #defines the logout method
 @get('/logout')
 def logout():
-    global userSignedIn
-    userSignedIn = False
-
 
     token = request.get("token")
     requests.post('https://accounts.google.com/o/oauth2/revoke', params={'token': token},
                   headers={'content-type': 'application/x-www-form-urlencoded'})
+
+    global userSignedIn
+    userSignedIn = False
+
     bottle.redirect("http://localhost:8080")
 
 # enables search engine logo to be displayed
