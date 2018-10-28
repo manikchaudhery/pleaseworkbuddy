@@ -7,7 +7,7 @@
 </head>
 
 <div class="text-center">
-	<img src="static/logo_transparent.jpg" height="200" width="200">
+	<img src="static/logo_transparent.png" height="200" width="200">
 </div>
 <form action="/" method="post" class="col-lg-6 offset-lg-3 ">
 	<div class="row justify-content-center">
