@@ -22,5 +22,5 @@
 </form>
 
 <div class="text-center">
-       <a href="http://localhost:8080/logout"><button id="logout" type="button">Log Out</button></a>
+       <a href="http://0.0.0.0:80/logout"><button id="logout" type="button">Log Out</button></a>
 </div>
