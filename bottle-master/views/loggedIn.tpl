@@ -7,7 +7,7 @@
 </head>
 
 <div class = text-center>
-	<img src="static/logo_transparent.jpg" height="200" width="200">
+	<img src="static/logo_transparent.png" height="200" width="200">
 	<h3> Welcome {{user_email}}! </h3>
 </div>
 
