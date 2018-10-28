@@ -38,7 +38,6 @@ def getMethod():
         bottle.redirect("http://localhost:8080/login")
 
     # if user is already logged in
-    userSignedIn = True
     return template("object")
 
 # this method enables the counting of words in results
