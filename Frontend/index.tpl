@@ -19,7 +19,7 @@
 </form>
 
 <div class="row">
-	<div class="col-md-1"></div>
+	<div class="col-md-4"></div>
 	<div class="col-md-4">
 		<h2 class="text-center">Results</h2>
 		<table class="table table-hover table-dark">
@@ -35,7 +35,10 @@
 				% end
 			</table>
 	</div>
+	<div class="col-md-4">
+	</div>
 </div>
-<div>
+
+<div class="text-center">
     <a href="http://localhost:8080/login"><button id="login" type="button" class="btn">Log In</button></a>
 </div>
