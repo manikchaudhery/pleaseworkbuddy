@@ -8,7 +8,7 @@
 
 <div class="text-center">
     <h3> Welcome {{user_email}} </h3>
-    <img src="static/logo_transparent.jpg" height="200" width="200">
+    <img src="static/logo_transparent.png" height="200" width="200">
     <br><a href="http://0.0.0.0:80/logout"><button id="logout" type="button" class="btn">Log Out</button></a>
 
 </div>
