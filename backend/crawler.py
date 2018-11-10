@@ -26,7 +26,7 @@ import re
 from pagerank import page_rank
 from pymongo import MongoClient
 
-uri = "mongodb://zafeer:zafeer123@ds235785.mlab.com:35785/csc326_database"
+uri = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 print uri
 
 #client = MongoClient('localhost', 27017)
