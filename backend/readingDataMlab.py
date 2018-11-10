@@ -1,6 +1,6 @@
 from collections import defaultdict
 from pymongo import MongoClient
-uri = "mongodb://zafeer:zafeer123@ds235785.mlab.com:35785/csc326_database"
+uri = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 client = MongoClient(uri, connectTimeoutMS=30000)
 
 db = client.get_database("csc326_database")
