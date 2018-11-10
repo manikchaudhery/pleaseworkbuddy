@@ -16,13 +16,28 @@
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
+# THE SOFTWARE.m
 
 import urllib2
 import urlparse
 from BeautifulSoup import *
 from collections import defaultdict
 import re
+from pagerank import page_rank
+from pymongo import MongoClient
+
+uri = "mongodb://zafeer:zafeer123@ds235785.mlab.com:35785/csc326_database"
+print uri
+
+#client = MongoClient('localhost', 27017)
+client = MongoClient(uri, connectTimeoutMS=30000)
+#db = client['CSC326_Database']
+db = client.get_database("csc326_database")
+
+lexiconDB = db['Lexicon']
+invertedIndexDB = db['Inverted_Index']
+pageRankDB = db['Page_Rank']
+docIndexDB = db['Doc_Index']
 
 def attr(elem, attr):
     """An html attribute from an html element. E.g. <a href="">, then
@@ -48,8 +63,10 @@ class crawler(object):
         self._doc_id_cache = { }				# url	-> docID
         self._word_id_cache = { }				# word	-> wordID
 
-	self._inverted_index = defaultdict(set)			# wordID -> set(docID)
-	self._resolved_inverted_index = defaultdict(set)	# word	-> set(url)
+        self._inverted_index = defaultdict(set)			# wordID -> set(docID)
+        self._resolved_inverted_index = defaultdict(set)	# word	-> set(url)
+
+        self._links_cache = [ ]
 
         # functions to call when entering and exiting specific tags
         self._enter = defaultdict(lambda *a, **ka: self._visit_ignore)
@@ -163,6 +180,7 @@ class crawler(object):
         
         doc_id = self._mock_insert_document(url)
         self._doc_id_cache[url] = doc_id
+
         return doc_id
     
     def _fix_url(self, curr_url, rel):
@@ -182,11 +200,12 @@ class crawler(object):
         """Add a link into the database, or increase the number of links between
         two pages in the database."""
         # TODO
+        self._links_cache.append((from_doc_id, to_doc_id)) 
 
     def _visit_title(self, elem):
         """Called when visiting the <title> tag."""
         title_text = self._text_of(elem).strip()
-        print "document title="+ repr(title_text)
+        print ("document title=" + repr(title_text))
 
         # TODO update document title for document id self._curr_doc_id
     
@@ -213,7 +232,7 @@ class crawler(object):
         # TODO: knowing self._curr_doc_id and the list of all words and their
         #       font sizes (in self._curr_words), add all the words into the
         #       database for this document
-        print "    num words="+ str(len(self._curr_words))
+        print ("    num words="+ str(len(self._curr_words)))
 
     def _increase_font_factor(self, factor):
         """Increade/decrease the current font size."""
@@ -236,11 +255,12 @@ class crawler(object):
             self._curr_words.append((self.word_id(word), self._font_size))
 
 	    #Map word_id to the current documentID
-	    self._inverted_index[self.word_id(word)].add(self._curr_doc_id)
+        self._inverted_index[self.word_id(word)].add(self._curr_doc_id)
 
 	    #Map each word to the current url
-	    self._resolved_inverted_index[str(word)].add(self._curr_url)	
+        self._resolved_inverted_index[str(word)].add(self._curr_url)
         
+
     def _text_of(self, elem):
         """Get the text inside some element without any tags."""
         if isinstance(elem, Tag):
@@ -330,22 +350,79 @@ class crawler(object):
                 self._curr_words = [ ]
                 self._index_document(soup)
                 self._add_words_to_document()
-                print "    url="+repr(self._curr_url)
+                print ("    url="+repr(self._curr_url))
 
             except Exception as e:
-                print e
+                print (e)
                 pass
             finally:
                 if socket:
                     socket.close()
 
+        # rankings = page_rank(self._links_cache)
+        # for doc_id, url_ranks in rankings.items():
+        #     pageRankPost = {
+        #         'doc_id': doc_id,
+        #         'url_ranks': url_ranks
+        #     }
+        #     pageRankDB.insert_one(pageRankPost)
+
     #Return a dictionary with the word ID as the key and the value being a set of document IDs
     def get_inverted_index(self):
-	return dict(self._inverted_index)
+        return dict(self._inverted_index)
 	
     #Return a dictionary with word strings as the key and the value being a set of URL strings
     def get_resolved_inverted_index(self):
-	return dict(self._resolved_inverted_index)
+        return dict(self._resolved_inverted_index)
+
+    #Return a dictionary with a link from_id as the key and the value being a set of link to_id
+    def get_links_cache(self):
+        return self._links_cache
+
+    def get_page_rank(self):
+        rankings = page_rank(self._links_cache)
+        return rankings
+
+    def lexicon_to_DB(self):
+        for word in self._word_id_cache:
+            wordPost = {
+                'word': word,
+                'word_id': self._word_id_cache[word]
+            }
+            lexiconDB.insert_one(wordPost)
+
+    def invertedIndex_to_DB(self):
+        for word_id in self._inverted_index:
+            invertedIndexPost = {
+                'word_id': word_id,
+                'doc_IDs': []
+            }
+            invertedIndexDB.insert_one(invertedIndexPost)
+            for i in range(len(self._inverted_index[word_id])):
+                invertedIndexDB.update(
+                    {
+                        'word_id': word_id
+                    },
+                    {
+                        '$push': {'doc_IDs': list(self._inverted_index[word_id])[i]}
+                    })
+
+    def page_rank_to_DB(self):
+        rankings = page_rank(self._links_cache)
+        for doc_id in rankings:
+            pageRankPost = {
+                'doc_id': doc_id,
+                'url_ranks': rankings[doc_id]
+            }
+            pageRankDB.insert_one(pageRankPost)
+
+    def docIndex_to_DB(self):
+        for url in self._doc_id_cache:
+            docIndexPost = {
+                'url': url,
+                'doc_id': self._doc_id_cache[url]
+            }
+            docIndexDB.insert_one(docIndexPost)
 
 if __name__ == "__main__":
     bot = crawler(None, "urls.txt")
