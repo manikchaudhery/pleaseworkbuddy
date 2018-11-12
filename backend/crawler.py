@@ -26,8 +26,7 @@ import re
 from pagerank import page_rank
 from pymongo import MongoClient
 
-uri = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-print uri
+uri = "mongodb://zafeer:zafeer123@ds235785.mlab.com:35785/csc326_database"
 
 #client = MongoClient('localhost', 27017)
 client = MongoClient(uri, connectTimeoutMS=30000)
@@ -200,6 +199,9 @@ class crawler(object):
         """Add a link into the database, or increase the number of links between
         two pages in the database."""
         # TODO
+        if (from_doc_id, to_doc_id) in self._links_cache:
+            return
+            
         self._links_cache.append((from_doc_id, to_doc_id)) 
 
     def _visit_title(self, elem):
