@@ -15,6 +15,8 @@ sudo pip install oauth2client
 
 sudo pip install google-api-python-client
 
+sudo pip install pymongo
+
 printf "\nsshSetup: Cloning Git Project Repo"
 sudo git clone https://github.com/manikchaudhery/pleaseworkbuddy.git
 
