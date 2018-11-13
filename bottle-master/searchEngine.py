@@ -68,6 +68,8 @@ def index():
     # getting the sentence entered by the user
     searchSentence = request.forms.get('search')
     print('search sentence is: ', searchSentence)
+    if(searchSentence == ""):
+        bottle.redirect("http://35.169.149.120/")
 
     # making sure not to pass in an empty string
     if (searchSentence != None):
