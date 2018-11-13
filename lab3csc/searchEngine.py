@@ -206,7 +206,7 @@ def redirect_page():
     global userSignedIn
 
     if not userSignedIn:
-        bottle.redirect("http://localhost:8080")
+        bottle.redirect("http://localhost:8080/")
     code = request.query.get('code', '')
 
 
@@ -398,7 +398,7 @@ def logout():
     global userSignedIn
     userSignedIn = False
 
-    bottle.redirect("http://localhost:8080")
+    bottle.redirect("http://localhost:8080/")
 
 # enables search engine logo to be displayed
 @route('/static/<filename>')
@@ -426,10 +426,7 @@ def countNumberOfWords(sentence):
     print("occurences in funcion are ", occurences)
     return occurences
 
-@route('/<filename:path>')
-def send_static(filename):
-    return static_file(filename, root='./static')
 
 # starting the server
 if __name__ == '__main__':
-    run(host='localhost', port=8080, debug=True)
+    run(host='localhost', port=8080)

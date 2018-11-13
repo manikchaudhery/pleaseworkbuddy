@@ -5,10 +5,11 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
-%print ('herer')
+
 <div class="text-center">
     <h3> Welcome {{user_email}} </h3>
-    <img src="static/logo_transparent.png" height="200" width="200">
+    <br>
+    <p class="h1">Kuria</p>
     <br><a href="http://localhost:8080/logout"><button id="logout" type="button" class="btn">Log Out</button></a>
 
 </div>
@@ -52,3 +53,4 @@
 <div class="text-center">
     <h5>Page {{currentPage}} of {{pagesNeeded}}</h5>
 </div>
+

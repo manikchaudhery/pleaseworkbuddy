@@ -7,7 +7,8 @@
 </head>
 
 <div class="text-center">
-	<img src="static/logo_transparent.png" height="200" width="200">
+    <br>
+    <p class="h1">Kuria</p>
 </div>
 <form action="/" method="post" class="col-lg-6 offset-lg-3 ">
 	<div class="row justify-content-center">

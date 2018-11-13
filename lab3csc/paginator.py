@@ -4,12 +4,13 @@ uri = "mongodb://zafeer:zafeer123@ds235785.mlab.com:35785/csc326_database"
 client = MongoClient(uri, connectTimeoutMS=30000)
 
 db = client.get_database("csc326_database")
-doc_IDs = list()
+
 
 lexiconDB = db['Lexicon']
 invertedIndexDB = db['Inverted_Index']
 pageRankDB = db['Page_Rank']
 docIndexDB = db['Doc_Index']
+
 def finder(word = ""):
     print ('word:\t\t', word)
     word_id = 0
@@ -23,7 +24,7 @@ def finder(word = ""):
     if word_id == 0:
         return 0
 
-    global doc_IDs
+    doc_IDs = list()
     docIDPost = invertedIndexDB.find({'word_id': word_id})
     for post in docIDPost:
 
