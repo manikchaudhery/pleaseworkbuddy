@@ -8,8 +8,8 @@
 
 <div class="text-center">
     <h3> Welcome {{user_email}} </h3>
-    <img src="static/logo_transparent.png" height="200" width="200">
-    <br><a href="http://184.73.52.206/logout"><button id="logout" type="button" class="btn">Log Out</button></a>
+    <img src="static/logo_transparent.jpg" height="200" width="200">
+    <br><a href="http://54.87.231.248/logout"><button id="logout" type="button" class="btn">Log Out</button></a>
 
 </div>
 <form action="/redirect" method="post" class="col-lg-6 offset-lg-3 ">
@@ -21,28 +21,38 @@
 	</div>
 </form>
 
-
 <div class="row">
-    % i = 0
-	<div class="col-md-4"></div>
+	<div class="col-md-1"></div>
 	<div class="col-md-4">
 		<h2 class="text-center">Results</h2>
 		<table class="table table-hover table-dark">
 			<tr>
-				<th>URL</th>
+				<th>Word</th>
+				<th>Frequency</th>
 			</tr>
-				% for item in urlsList:
+				% for item in occurences:
 					<tr>
-						<td><a href="{{item}}">{{item}}</a></td>
-						% i = i+1
+						<td>{{item[0]}}</td>
+						<td>{{item[1]}}</td>
 					</tr>
 				% end
 			</table>
 	</div>
+	<div class="col-md-2"></div>
 	<div class="col-md-4">
+		<h2 class="text-center">History</h2>
+		<table class="table table-hover table-dark">
+			<tr>
+				<th>Word</th>
+				<th>Frequency</th>
+		  	</tr>
+			% for item in sortedTopTwentyDictionary:
+				<tr>
+					<td>{{item[0]}}</td>
+					<td>{{item[1]}}</td>
+				</tr>
+			% end
+		</table>
+	<div class="col-md-1"></div>
 	</div>
-</div>
-
-<div class="text-center">
-    <h5>Page 1 of 1</h5>
 </div>

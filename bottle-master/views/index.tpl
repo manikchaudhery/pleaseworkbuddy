@@ -7,7 +7,7 @@
 </head>
 
 <div class="text-center">
-	<img src="static/logo_transparent.png" height="200" width="200">
+	<img src="static/logo_transparent.jpg" height="200" width="200">
 </div>
 <form action="/" method="post" class="col-lg-6 offset-lg-3 ">
 	<div class="row justify-content-center">
@@ -18,27 +18,19 @@
 	</div>
 </form>
 
-
-
-
-<div class="text-center">
-    <a href="http://184.73.52.206/login"><button id="login" type="button" class="btn">Log In</button></a>
-</div>
-
-
 <div class="row">
-    % i = 0
 	<div class="col-md-4"></div>
 	<div class="col-md-4">
 		<h2 class="text-center">Results</h2>
 		<table class="table table-hover table-dark">
 			<tr>
-				<th>URL</th>
+				<th>Word</th>
+				<th>Frequency</th>
 			</tr>
-				% for item in urlsList:
+				% for item in occurences:
 					<tr>
-						<td><a href="{{item}}">{{item}}</a></td>
-						% i = i+1
+						<td>{{item[0]}}</td>
+						<td>{{item[1]}}</td>
 					</tr>
 				% end
 			</table>
@@ -48,5 +40,5 @@
 </div>
 
 <div class="text-center">
-    <h5>Page 1 of 1</h5>
+    <a href="http://54.87.231.248/login"><button id="login" type="button" class="btn">Log In</button></a>
 </div>
