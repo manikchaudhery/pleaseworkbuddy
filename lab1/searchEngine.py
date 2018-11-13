@@ -120,6 +120,7 @@ def displayResults(pageNumber):
     global currentPage
 
     currentPage = int(pageNumber)
+    print("earlier current page number is: ", currentPage)
 
     nextPage = 0
     previousPage = 0
@@ -130,43 +131,47 @@ def displayResults(pageNumber):
     while reip <= pagesNeeded:
 
         newList = docsSorted[lowerCount:upperCount]
-        print('printing new list: ')
-        print(newList)
+        #print('printing new list: ')
+        #print(newList)
         listOfLists.append(newList)
         lowerCount = upperCount
         upperCount += 5
         reip += 1
-    print('list of lists')
-    print(listOfLists)
-    print(lowerCount)
-    print(upperCount)
+    #print('list of lists')
+    #print(listOfLists)
+    #print(lowerCount)
+    #print(upperCount)
     newdocs = listOfLists[currentPage-1]
 
     if currentPage == pagesNeeded:
         nextPage = pagesNeeded
         picture_name = "logo_transparent.png"
-        print('pages needed is: ', pagesNeeded)
+        #print('pages needed is: ', pagesNeeded)
+        previousPage = currentPage - 1
         return template('noNextButton', previousPage=previousPage,
                         picture=picture_name, urlsList=newdocs, currentPage=currentPage, listOfLists=listOfLists,
                         pagesNeeded=pagesNeeded)
 
-    else:
-        nextPage = currentPage + 1
+
+
 
 
     if currentPage == 1:
         previousPage = 1
+        nextPage = currentPage + 1
         picture_name = "logo_transparent.png"
-        print('pages needed is: ', pagesNeeded)
+        #print('pages needed is: ', pagesNeeded)
         return template('noPreviousButton', nextPage=nextPage,
                         picture=picture_name, urlsList=newdocs, currentPage=currentPage, listOfLists=listOfLists,
                         pagesNeeded=pagesNeeded)
 
-    else:
-        previousPage = currentPage - 1
+    nextPage = currentPage + 1
+
+    previousPage = currentPage - 1
+
 
     picture_name = "logo_transparent.png"
-    print('pages needed is: ', pagesNeeded)
+    #print('pages needed is: ', pagesNeeded)
     return template('newIndex', nextPage=nextPage, previousPage=previousPage,
                     picture=picture_name, urlsList=newdocs, currentPage=currentPage, listOfLists=listOfLists, pagesNeeded=pagesNeeded)
 
@@ -340,26 +345,28 @@ def displayResults(pageNumber):
 
     if currentPage == pagesNeeded:
         nextPage = pagesNeeded
+        previousPage = currentPage - 1
         picture_name = "logo_transparent.png"
         print('pages needed is: ', pagesNeeded)
         return template('noNextButtonLoggedIn',nextPage=nextPage, previousPage=previousPage,
                     picture=picture_name, urlsList=newdocs, currentPage=currentPage, listOfLists=listOfLists, pagesNeeded=pagesNeeded, user_email=user_email)
 
 
-    else:
-        nextPage = currentPage + 1
+
 
 
     if currentPage == 1:
         previousPage = 1
+        nextPage = currentPage + 1
         picture_name = "logo_transparent.png"
         print('pages needed is: ', pagesNeeded)
         return template('noPreviousButtonLoggedIn', nextPage=nextPage, previousPage=previousPage,
                     picture=picture_name, urlsList=newdocs, currentPage=currentPage, listOfLists=listOfLists, pagesNeeded=pagesNeeded, user_email=user_email)
 
 
-    else:
-        previousPage = currentPage - 1
+    nextPage = currentPage + 1
+
+    previousPage = currentPage - 1
 
     picture_name = "logo_transparent.png"
     print('pages needed is: ', pagesNeeded)
