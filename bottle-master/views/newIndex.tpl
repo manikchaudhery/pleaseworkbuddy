@@ -22,7 +22,7 @@
 
 
 <div class="text-center">
-    <a href="http://0.0.0.0:80/login"><button id="login" type="button" class="btn">Log In</button></a>
+    <a href="http://34.203.46.79/login"><button id="login" type="button" class="btn">Log In</button></a>
 </div>
 
 
@@ -48,10 +48,10 @@
 </div>
 
 <div class="text-center">
-        % newPrevString =  "http://0.0.0.0:80/results/" + str(previousPage)
+        % newPrevString =  "http://34.203.46.79/results/" + str(previousPage)
         <a href={{newPrevString}}><button id="previous" type="button" class="btn"><<</button></a>
 
-        % newString =  "http://0.0.0.0:80/results/" + str(nextPage)
+        % newString =  "http://34.203.46.79/results/" + str(nextPage)
            <a href= {{newString}}><button id="next" type="button" class="btn">>></button></a>
 </div>
 

@@ -9,7 +9,7 @@
 <div class="text-center">
     <h3> Welcome {{user_email}} </h3>
     <img src="static/logo_transparent.png" height="200" width="200">
-    <br><a href="http://0.0.0.0:80/logout"><button id="logout" type="button" class="btn">Log Out</button></a>
+    <br><a href="http://34.203.46.79/logout"><button id="logout" type="button" class="btn">Log Out</button></a>
 
 </div>
 <form action="/redirect" method="post" class="col-lg-6 offset-lg-3 ">

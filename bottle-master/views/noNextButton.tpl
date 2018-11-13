@@ -22,7 +22,7 @@
 
 
 <div class="text-center">
-    <a href="http://0.0.0.0:80/login"><button id="login" type="button" class="btn">Log In</button></a>
+    <a href="http://34.203.46.79/login"><button id="login" type="button" class="btn">Log In</button></a>
 </div>
 
 

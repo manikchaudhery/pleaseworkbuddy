@@ -32,7 +32,7 @@
 				<h1>Oops!</h1>
 				<h2>404 - The Page can't be found</h2>
 			</div>
-			<a href="http://0.0.0.0:80">Go To Homepage</a>
+			<a href="http://34.203.46.79">Go To Homepage</a>
 		</div>
 	</div>
 
