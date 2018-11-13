@@ -7,12 +7,9 @@
 </head>
 
 <div class="text-center">
-    <h3> Welcome {{user_email}} </h3>
-    <img src="static/logo_transparent.png" height="200" width="200">
-    <br><a href="http://localhost:8080/logout"><button id="logout" type="button" class="btn">Log Out</button></a>
-
+	<img src="static/logo_transparent.png" height="200" width="200">
 </div>
-<form action="/redirect" method="post" class="col-lg-6 offset-lg-3 ">
+<form action="/" method="post" class="col-lg-6 offset-lg-3 ">
 	<div class="row justify-content-center">
 		<input name="search" type="text" placeholder="Enter query" />
 		<span class="input-group-btn">
@@ -20,6 +17,12 @@
 		</span>
 	</div>
 </form>
+
+
+
+<div class="text-center">
+    <a href="http://localhost:8080/login"><button id="login" type="button" class="btn">Log In</button></a>
+</div>
 
 
 <div class="row">
@@ -44,5 +47,11 @@
 </div>
 
 <div class="text-center">
-    <h5>Page 1 of 1</h5>
+% newString =  "http://localhost:8080/results/" + str(nextPage)
+<a href= {{newString}}><button id="next" type="button" class="btn">>></button></a>
+</div>
+
+
+<div class="text-center">
+    <h5>Page {{currentPage}} of {{pagesNeeded}}</h5>
 </div>

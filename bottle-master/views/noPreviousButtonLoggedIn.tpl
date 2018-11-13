@@ -5,7 +5,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
-
+%print ('herer')
 <div class="text-center">
     <h3> Welcome {{user_email}} </h3>
     <img src="static/logo_transparent.png" height="200" width="200">
@@ -20,8 +20,6 @@
 		</span>
 	</div>
 </form>
-
-
 <div class="row">
     % i = 0
 	<div class="col-md-4"></div>
@@ -43,6 +41,13 @@
 	</div>
 </div>
 
+
 <div class="text-center">
-    <h5>Page 1 of 1</h5>
+% newString =  "http://localhost:8080/resultsLoggedIn/" + str(nextPage)
+<a href= {{newString}}><button id="next" type="button" class="btn">>></button></a>
+</div>
+
+
+<div class="text-center">
+    <h5>Page {{currentPage}} of {{pagesNeeded}}</h5>
 </div>

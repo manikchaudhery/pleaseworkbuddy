@@ -18,19 +18,27 @@
 	</div>
 </form>
 
+
+
+
+<div class="text-center">
+    <a href="http://localhost:8080/login"><button id="login" type="button" class="btn">Log In</button></a>
+</div>
+
+
 <div class="row">
+    % i = 0
 	<div class="col-md-4"></div>
 	<div class="col-md-4">
 		<h2 class="text-center">Results</h2>
 		<table class="table table-hover table-dark">
 			<tr>
-				<th>Word</th>
-				<th>Frequency</th>
+				<th>URL</th>
 			</tr>
-				% for item in occurences:
+				% for item in urlsList:
 					<tr>
-						<td>{{item[0]}}</td>
-						<td>{{item[1]}}</td>
+						<td><a href="{{item}}">{{item}}</a></td>
+						% i = i+1
 					</tr>
 				% end
 			</table>
@@ -40,5 +48,5 @@
 </div>
 
 <div class="text-center">
-    <a href="http://0.0.0.0:80/login"><button id="login" type="button" class="btn">Log In</button></a>
+    <h5>Page 1 of 1</h5>
 </div>
