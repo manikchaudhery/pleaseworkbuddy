@@ -22,7 +22,7 @@
 </form>
 
 <div class="text-center">
-       <a href="http://35.169.149.120/logout"><button id="logout" type="button">Log Out</button></a>
+       <a href="http://184.73.52.206/logout"><button id="logout" type="button">Log Out</button></a>
 </div>
 
 <div class="text-center">

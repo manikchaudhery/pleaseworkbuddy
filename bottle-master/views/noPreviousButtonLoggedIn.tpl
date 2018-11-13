@@ -10,7 +10,7 @@
     <h3> Welcome {{user_email}} </h3>
     <br>
     <p class="h1">Kuria</p>
-    <br><a href="http://35.169.149.120/logout"><button id="logout" type="button" class="btn">Log Out</button></a>
+    <br><a href="http://184.73.52.206/logout"><button id="logout" type="button" class="btn">Log Out</button></a>
 
 </div>
 <form action="/redirect" method="post" class="col-lg-6 offset-lg-3 ">
@@ -44,7 +44,7 @@
 
 
 <div class="text-center">
-% newString =  "http://35.169.149.120/resultsLoggedIn/" + str(nextPage)
+% newString =  "http://184.73.52.206/resultsLoggedIn/" + str(nextPage)
 <a href= {{newString}}><button id="next" type="button" class="btn">>></button></a>
 </div>
 
