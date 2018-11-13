@@ -7,7 +7,8 @@
 </head>
 
 <div class="text-center">
-	<img src="static/logo_transparent.png" height="200" width="200">
+    <br>
+    <p class="h1">Kuria</p>
 </div>
 <form action="/" method="post" class="col-lg-6 offset-lg-3 ">
 	<div class="row justify-content-center">
@@ -21,7 +22,7 @@
 
 
 <div class="text-center">
-    <a href="http://localhost:8080/login"><button id="login" type="button" class="btn">Log In</button></a>
+    <a href="http://0.0.0.0:80/login"><button id="login" type="button" class="btn">Log In</button></a>
 </div>
 
 
@@ -47,10 +48,10 @@
 </div>
 
 <div class="text-center">
-        % newPrevString =  "http://localhost:8080/results/" + str(previousPage)
+        % newPrevString =  "http://0.0.0.0:80/results/" + str(previousPage)
         <a href={{newPrevString}}><button id="previous" type="button" class="btn"><<</button></a>
 
-        % newString =  "http://localhost:8080/results/" + str(nextPage)
+        % newString =  "http://0.0.0.0:80/results/" + str(nextPage)
            <a href= {{newString}}><button id="next" type="button" class="btn">>></button></a>
 </div>
 

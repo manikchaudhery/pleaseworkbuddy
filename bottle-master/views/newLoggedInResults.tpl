@@ -5,11 +5,12 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
-%print ('herer')
+
 <div class="text-center">
     <h3> Welcome {{user_email}} </h3>
-    <img src="static/logo_transparent.png" height="200" width="200">
-    <br><a href="http://localhost:8080/logout"><button id="logout" type="button" class="btn">Log Out</button></a>
+    <br>
+    <p class="h1">Kuria</p>
+    <br><a href="http://0.0.0.0:80/logout"><button id="logout" type="button" class="btn">Log Out</button></a>
 
 </div>
 <form action="/redirect" method="post" class="col-lg-6 offset-lg-3 ">
@@ -42,9 +43,9 @@
 </div>
 
 <div class="text-center">
-        % newPrevString =  "http://localhost:8080/resultsLoggedIn/" + str(previousPage)
+        % newPrevString =  "http://0.0.0.0:80/resultsLoggedIn/" + str(previousPage)
         <a href={{newPrevString}}><button id="previous" type="button" class="btn"><<</button></a>
-        % newString =  "http://localhost:8080/resultsLoggedIn/" + str(nextPage)
+        % newString =  "http://0.0.0.0:80/resultsLoggedIn/" + str(nextPage)
         <a href= {{newString}}><button id="next" type="button" class="btn">>></button></a>
 </div>
 
@@ -52,3 +53,4 @@
 <div class="text-center">
     <h5>Page {{currentPage}} of {{pagesNeeded}}</h5>
 </div>
+
