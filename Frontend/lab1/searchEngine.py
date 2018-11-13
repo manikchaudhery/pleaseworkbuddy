@@ -8,7 +8,65 @@ from googleapiclient.discovery import build
 import json
 import httplib2
 import requests
-from paginator import finder
+
+#Paginator
+from collections import defaultdict
+from pymongo import MongoClient
+uri = "mongodb://zafeer:zafeer123@ds235785.mlab.com:35785/csc326_database"
+client = MongoClient(uri, connectTimeoutMS=30000)
+
+db = client.get_database("csc326_database")
+doc_IDs = list()
+
+lexiconDB = db['Lexicon']
+invertedIndexDB = db['Inverted_Index']
+pageRankDB = db['Page_Rank']
+docIndexDB = db['Doc_Index']
+
+def finder(word = ""):
+    print ('word:\t\t', word)
+    word_id = 0
+
+    wordPost = lexiconDB.find({'word': word})
+    for post in wordPost:
+
+        #Parse JSON object 'post' for the word_id
+        word_id = post['word_id']
+    print ('\nword_id:\t', word_id)
+
+    global doc_IDs
+    docIDPost = invertedIndexDB.find({'word_id': word_id})
+    for post in docIDPost:
+
+        #Parse JSON object 'post' for the doc_IDs
+        doc_IDs = post['doc_IDs']
+    print ("\ndoc_IDs:\t",doc_IDs)
+
+    pageRanks = {}
+    for docID in doc_IDs:
+        docIDPost = pageRankDB.find({'doc_id': docID})
+        for post in docIDPost:
+
+            #Parse JSON object 'post' for the url_ranks
+            pageRank = post['url_ranks']
+            pageRanks[docID] = pageRank
+    print ("\npageRanks:\n",pageRanks)
+
+    sortedRankingsList = sorted(pageRanks.items(), key=lambda x:-x[1])
+    print ("\nsortedRankingsList:\n",sortedRankingsList)
+    if len(sortedRankingsList) > 0:
+        urlsInSortedPageRankOrder = list()
+        for (docID, pageRank) in sortedRankingsList:
+            urlPost = docIndexDB.find({'doc_id': docID})
+            for post in urlPost:
+
+                #Parse JSON object 'post' for the url
+                url = post['url']
+                urlsInSortedPageRankOrder.append(url)
+        print ("\nUrls in sorted Page Rank order:\n",urlsInSortedPageRankOrder)
+        return urlsInSortedPageRankOrder
+
+    return len(sortedRankingsList)
 
 
 
@@ -62,6 +120,7 @@ def index():
     global firstWord
     global pagesNeeded
     occurencesList = []
+    global doc_IDs
     sortedTopTwentyDictionary = dict()
     searchSentence = ""
 
@@ -83,8 +142,9 @@ def index():
         firstWord = searchSentence.lower().split()[0]
         docsSorted = finder(firstWord)
         if len(docsSorted) <= 5:
-            return template('index', occurences=occurencesList,
-                            picture=picture_name, searchSentence=searchSentence, urlsList=docsSorted)
+            return template('index', occurences=occurencesList, doc_IDs = doc_IDs,
+                            picture=picture_name, searchSentence=searchSentence,
+                            urlsList=docsSorted)
         else:
             remainder = len(docsSorted) % 5
             print('remainder is: ', remainder)
@@ -118,9 +178,9 @@ def displayResults(pageNumber):
     global upperCount
     global lowerCount
     global currentPage
+    global doc_IDs
 
     currentPage = int(pageNumber)
-    print("earlier current page number is: ", currentPage)
 
     nextPage = 0
     previousPage = 0
@@ -131,49 +191,47 @@ def displayResults(pageNumber):
     while reip <= pagesNeeded:
 
         newList = docsSorted[lowerCount:upperCount]
-        #print('printing new list: ')
-        #print(newList)
+        newRankList = doc_IDs[lowerCount:upperCount]
+        print('printing new list: ')
+        print(newList)
         listOfLists.append(newList)
         lowerCount = upperCount
         upperCount += 5
         reip += 1
-    #print('list of lists')
-    #print(listOfLists)
-    #print(lowerCount)
-    #print(upperCount)
+    print('list of lists')
+    print(listOfLists)
+    print(lowerCount)
+    print(upperCount)
     newdocs = listOfLists[currentPage-1]
 
     if currentPage == pagesNeeded:
         nextPage = pagesNeeded
         picture_name = "logo_transparent.png"
-        #print('pages needed is: ', pagesNeeded)
-        previousPage = currentPage - 1
+        print('pages needed is: ', pagesNeeded)
         return template('noNextButton', previousPage=previousPage,
                         picture=picture_name, urlsList=newdocs, currentPage=currentPage, listOfLists=listOfLists,
-                        pagesNeeded=pagesNeeded)
+                        pagesNeeded=pagesNeeded, doc_IDs=newRankList)
 
-
-
+    else:
+        nextPage = currentPage + 1
 
 
     if currentPage == 1:
         previousPage = 1
-        nextPage = currentPage + 1
         picture_name = "logo_transparent.png"
-        #print('pages needed is: ', pagesNeeded)
+        print('pages needed is: ', pagesNeeded)
         return template('noPreviousButton', nextPage=nextPage,
                         picture=picture_name, urlsList=newdocs, currentPage=currentPage, listOfLists=listOfLists,
-                        pagesNeeded=pagesNeeded)
+                        pagesNeeded=pagesNeeded, doc_IDs=doc_IDs)
 
-    nextPage = currentPage + 1
-
-    previousPage = currentPage - 1
-
+    else:
+        previousPage = currentPage - 1
 
     picture_name = "logo_transparent.png"
-    #print('pages needed is: ', pagesNeeded)
+    print('pages needed is: ', pagesNeeded)
     return template('newIndex', nextPage=nextPage, previousPage=previousPage,
-                    picture=picture_name, urlsList=newdocs, currentPage=currentPage, listOfLists=listOfLists, pagesNeeded=pagesNeeded)
+                    picture=picture_name, urlsList=newdocs, currentPage=currentPage,
+                    listOfLists=listOfLists, pagesNeeded=pagesNeeded, doc_IDs=doc_IDs)
 
 
 
@@ -247,6 +305,7 @@ def displayResults():
     global docsSorted
     global firstWord
     global pagesNeeded
+    global doc_IDs
 
     # results table
     # getting the sentence entered by the user
@@ -286,7 +345,8 @@ def displayResults():
         docsSorted = finder(firstWord)
         if len(docsSorted) <= 5:
             return template('loggedInResults',
-                            picture=picture_name, searchSentence=searchSentence, urlsList=docsSorted, user_email=user_email)
+                            picture=picture_name, searchSentence=searchSentence,
+                            urlsList=docsSorted, user_email=user_email, doc_IDs=doc_IDs)
         else:
             remainder = len(docsSorted) % 5
             print('remainder is: ', remainder)
@@ -319,6 +379,7 @@ def displayResults(pageNumber):
     global upperCount
     global lowerCount
     global currentPage
+    global doc_IDs
 
     currentPage = int(pageNumber)
 
@@ -331,6 +392,7 @@ def displayResults(pageNumber):
     while reip <= pagesNeeded:
 
         newList = docsSorted[lowerCount:upperCount]
+        newRankList = doc_IDs[lowerCount:upperCount]
         print('printing new list: ')
         print(newList)
         listOfLists.append(newList)
@@ -345,33 +407,38 @@ def displayResults(pageNumber):
 
     if currentPage == pagesNeeded:
         nextPage = pagesNeeded
-        previousPage = currentPage - 1
         picture_name = "logo_transparent.png"
         print('pages needed is: ', pagesNeeded)
         return template('noNextButtonLoggedIn',nextPage=nextPage, previousPage=previousPage,
-                    picture=picture_name, urlsList=newdocs, currentPage=currentPage, listOfLists=listOfLists, pagesNeeded=pagesNeeded, user_email=user_email)
+                        picture=picture_name, urlsList=newdocs,
+                        currentPage=currentPage, listOfLists=listOfLists,
+                        pagesNeeded=pagesNeeded, user_email=user_email, doc_IDs=newRankList)
 
 
-
+    else:
+        nextPage = currentPage + 1
 
 
     if currentPage == 1:
         previousPage = 1
-        nextPage = currentPage + 1
         picture_name = "logo_transparent.png"
         print('pages needed is: ', pagesNeeded)
-        return template('noPreviousButtonLoggedIn', nextPage=nextPage, previousPage=previousPage,
-                    picture=picture_name, urlsList=newdocs, currentPage=currentPage, listOfLists=listOfLists, pagesNeeded=pagesNeeded, user_email=user_email)
+        return template('noPreviousButtonLoggedIn', nextPage=nextPage,
+                        previousPage=previousPage,
+                        picture=picture_name, urlsList=newdocs, currentPage=currentPage,
+                        listOfLists=listOfLists, pagesNeeded=pagesNeeded,
+                        user_email=user_email, doc_IDs=newRankList)
 
 
-    nextPage = currentPage + 1
-
-    previousPage = currentPage - 1
+    else:
+        previousPage = currentPage - 1
 
     picture_name = "logo_transparent.png"
     print('pages needed is: ', pagesNeeded)
     return template('newLoggedInResults', nextPage=nextPage, previousPage=previousPage,
-                    picture=picture_name, urlsList=newdocs, currentPage=currentPage, listOfLists=listOfLists, pagesNeeded=pagesNeeded, user_email=user_email)
+                    picture=picture_name, urlsList=newdocs, currentPage=currentPage,
+                    listOfLists=listOfLists, pagesNeeded=pagesNeeded,
+                    user_email=user_email, doc_IDs=newRankList)
 
 
 
