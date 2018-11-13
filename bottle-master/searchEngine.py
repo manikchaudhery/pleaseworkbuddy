@@ -35,9 +35,10 @@ def getMethod():
     if userSignedIn:
         counter += 1
         print(counter)
-        bottle.redirect("http://localhost:8080/login")
+        bottle.redirect("http://54.87.231.248/login")
 
     # if user is already logged in
+    userSignedIn = True
     return template("object")
 
 # this method enables the counting of words in results
@@ -75,7 +76,7 @@ def login():
     userSignedIn = True
 
     flow = flow_from_clientsecrets("client_secret.json",
-                                   redirect_uri="http://localhost:8080/redirect",
+                                   redirect_uri="http://54.87.231.248/redirect",
                                    scope='https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email'
                                    )
     uri = flow.step1_get_authorize_url()
@@ -87,7 +88,7 @@ def redirect_page():
     global userSignedIn
 
     if not userSignedIn:
-        bottle.redirect("http://localhost:8080")
+        bottle.redirect("http://54.87.231.248")
     code = request.query.get('code', '')
 
 
@@ -103,7 +104,7 @@ def redirect_page():
     scope = 'https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email'
 
     flow = OAuth2WebServerFlow(client_id=client_id, client_secret=client_secret, scope=scope,
-                               redirect_uri="http://localhost:8080/redirect")
+                               redirect_uri="http://54.87.231.248/redirect")
     credentials = flow.step2_exchange(code)
     token = credentials.id_token['sub']
 
@@ -180,7 +181,7 @@ def logout():
     global userSignedIn
     userSignedIn = False
 
-    bottle.redirect("http://0.0.0.0:8080")
+    bottle.redirect("http://54.87.231.248")
 
 # enables search engine logo to be displayed
 @route('/static/<filename>')
