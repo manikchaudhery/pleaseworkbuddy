@@ -84,7 +84,7 @@ def index():
         firstWord = searchSentence.lower().split()[0]
         docsSorted = finder(firstWord)
         if (docsSorted == 0):
-            bottle.redirect("http://0.0.0.0:80/urlNonExistent")
+            bottle.redirect("http://34.203.46.79/urlNonExistent")
         if len(docsSorted) <= 5:
             return template('index', occurences=occurencesList,
                             picture=picture_name, searchSentence=searchSentence, urlsList=docsSorted)
