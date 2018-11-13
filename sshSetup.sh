@@ -21,7 +21,7 @@ printf "\nsshSetup: Cloning Git Project Repo"
 sudo git clone https://github.com/manikchaudhery/pleaseworkbuddy.git
 
 cd pleaseworkbuddy
-cd lab3csc
+cd bottle-master
 
 sudo python searchEngine.py
 
