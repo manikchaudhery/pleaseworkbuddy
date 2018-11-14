@@ -85,6 +85,8 @@ def login():
 #user gets here when logged in
 @get('/redirect')
 def redirect_page():
+
+    bottle.redirect('http://54.87.231.248')
     global userSignedIn
 
     if not userSignedIn:
@@ -129,6 +131,7 @@ def redirect_page():
 
 @post('/redirect')
 def displayResults():
+    bottle.redirect('http://54.87.231.248')
     user_email = request.get_cookie("email")
     global userHistory
 
