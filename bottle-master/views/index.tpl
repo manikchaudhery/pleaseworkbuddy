@@ -38,3 +38,7 @@
 	<div class="col-md-4">
 	</div>
 </div>
+
+<div class="text-center">
+    <a href="http://54.87.231.248/"><button id="login" type="button" class="btn disabled">Log In</button></a>
+</div>
