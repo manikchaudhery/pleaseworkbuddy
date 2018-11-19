@@ -40,5 +40,5 @@
 </div>
 
 <div class="text-center">
-    <a href="http://54.87.231.248/"><button id="login" type="button" class="btn disabled">Log In</button></a>
+    <a href="http://100.24.82.5/"><button id="login" type="button" class="btn disabled">Log In</button></a>
 </div>
