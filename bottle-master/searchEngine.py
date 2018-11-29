@@ -429,4 +429,4 @@ def countNumberOfWords(sentence):
 
 # starting the server
 if __name__ == '__main__':
-    run(host='0.0.0.0', port=80)
+    run(host='34.194.136.17', port=80)
