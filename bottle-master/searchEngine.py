@@ -68,7 +68,8 @@ def index():
     # getting the sentence entered by the user
     searchSentence = request.forms.get('search')
     print('search sentence is: ', searchSentence)
-
+    if(searchSentence == ""):
+        bottle.redirect("http://34.194.136.17/")
     # making sure not to pass in an empty string
     if (searchSentence != None):
         searchSentence = searchSentence.lower()
@@ -429,4 +430,6 @@ def countNumberOfWords(sentence):
 
 # starting the server
 if __name__ == '__main__':
-    run(host='34.194.136.17', port=80)
+    run(host='0.0.0.0', port=80)
+
+
