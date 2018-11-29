@@ -7,8 +7,8 @@
 </head>
 
 <div class = text-center>
-	<img src="static/logo_transparent.jpg" height="200" width="200">
-	<a href="http://100.24.82.5/"><button id="login" type="button" class="btn disabled">Log In</button></a>
+	<img src="static/logo_transparent.png" height="200" width="200">
+	<a href="http://34.194.136.17/login"><button id="login" type="button" class="btn disabled">Log In</button></a>
 </div>
 
 
