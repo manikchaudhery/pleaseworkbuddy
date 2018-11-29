@@ -49,7 +49,7 @@ def getMethod():
     if userSignedIn:
         counter += 1
         print(counter)
-        bottle.redirect("http://localhost:8080/login")
+        bottle.redirect("http://34.194.136.17/login")
 
     # if user is already logged in
     return template("object")
@@ -68,7 +68,8 @@ def index():
     # getting the sentence entered by the user
     searchSentence = request.forms.get('search')
     print('search sentence is: ', searchSentence)
-
+    if(searchSentence == ""):
+        bottle.redirect("http://34.194.136.17/")
     # making sure not to pass in an empty string
     if (searchSentence != None):
         searchSentence = searchSentence.lower()
@@ -84,7 +85,7 @@ def index():
         firstWord = searchSentence.lower().split()[0]
         docsSorted = finder(firstWord)
         if (docsSorted == 0):
-            bottle.redirect("http://localhost:8080/urlNonExistent")
+            bottle.redirect("http://34.194.136.17/urlNonExistent")
         if len(docsSorted) <= 5:
             return template('index', occurences=occurencesList,
                             picture=picture_name, searchSentence=searchSentence, urlsList=docsSorted)
@@ -100,11 +101,11 @@ def index():
                 print('ithe')
                 pagesNeeded = (len(docsSorted) // 5) + 1
                 print(pagesNeeded)
-            newURl = "http://localhost:8080/results/1"
+            newURl = "http://34.194.136.17/results/1"
             bottle.redirect(newURl)
 
     if(docsSorted == 0):
-        bottle.redirect("http://localhost:8080/urlNonExistent")
+        bottle.redirect("http://34.194.136.17/urlNonExistent")
 
     return template('index',
                     picture=picture_name, urlsList=docsSorted)
@@ -126,7 +127,7 @@ def displayResults(pageNumber):
     print("earlier current page number is: ", currentPage)
 
     if(docsSorted == 0):
-        bottle.redirect("http://localhost:8080/urlNonExistent")
+        bottle.redirect("http://34.194.136.17/urlNonExistent")
     nextPage = 0
     previousPage = 0
     upperCount = 5
@@ -186,11 +187,12 @@ def displayResults(pageNumber):
 #following oauth google documentation
 @get('/login')
 def login():
+    bottle.redirect('http://34.194.136.17/')
     global userSignedIn
     userSignedIn = True
 
     flow = flow_from_clientsecrets("client_secret.json",
-                                   redirect_uri="http://localhost:8080/redirect",
+                                   redirect_uri="http://34.194.136.17/redirect",
                                    scope='https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email'
                                    )
     uri = flow.step1_get_authorize_url()
@@ -206,7 +208,7 @@ def redirect_page():
     global userSignedIn
 
     if not userSignedIn:
-        bottle.redirect("http://localhost:8080/")
+        bottle.redirect("http://34.194.136.17/")
     code = request.query.get('code', '')
 
 
@@ -222,7 +224,7 @@ def redirect_page():
     scope = 'https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email'
 
     flow = OAuth2WebServerFlow(client_id=client_id, client_secret=client_secret, scope=scope,
-                               redirect_uri="http://localhost:8080/redirect")
+                               redirect_uri="http://34.194.136.17/redirect")
     credentials = flow.step2_exchange(code)
     token = credentials.id_token['sub']
 
@@ -290,7 +292,7 @@ def displayResults():
         firstWord = searchSentence.lower().split()[0]
         docsSorted = finder(firstWord)
         if (docsSorted == 0):
-            bottle.redirect("http://localhost:8080/urlNonExistent")
+            bottle.redirect("http://34.194.136.17/urlNonExistent")
         if len(docsSorted) <= 5:
             return template('loggedInResults',
                             picture=picture_name, searchSentence=searchSentence, urlsList=docsSorted, user_email=user_email)
@@ -306,11 +308,11 @@ def displayResults():
                 print('ithe')
                 pagesNeeded = (len(docsSorted) // 5) + 1
                 print(pagesNeeded)
-            newURl = "http://localhost:8080/resultsLoggedIn/1"
+            newURl = "http://34.194.136.17/resultsLoggedIn/1"
             bottle.redirect(newURl)
 
     if(docsSorted == 0):
-        bottle.redirect("http://localhost:8080/urlNonExistent")
+        bottle.redirect("http://34.194.136.17/urlNonExistent")
 
 
 @get('/resultsLoggedIn/<pageNumber>')
@@ -398,7 +400,7 @@ def logout():
     global userSignedIn
     userSignedIn = False
 
-    bottle.redirect("http://34.194.136.17")
+    bottle.redirect("http://34.194.136.17/")
 
 # enables search engine logo to be displayed
 @route('/static/<filename>')
@@ -430,3 +432,5 @@ def countNumberOfWords(sentence):
 # starting the server
 if __name__ == '__main__':
     run(host='0.0.0.0', port=80)
+
+
