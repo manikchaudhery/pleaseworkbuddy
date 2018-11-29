@@ -187,6 +187,7 @@ def displayResults(pageNumber):
 #following oauth google documentation
 @get('/login')
 def login():
+    bottle.redirect('http://34.194.136.17/')
     global userSignedIn
     userSignedIn = True
 
