@@ -121,6 +121,7 @@ def displayResults(pageNumber):
     global upperCount
     global lowerCount
     global currentPage
+    listOfLists = list()
 
     currentPage = int(pageNumber)
     print("earlier current page number is: ", currentPage)
