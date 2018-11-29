@@ -22,7 +22,7 @@
 
 
 <div class="text-center">
-    <a href="http://34.194.136.17/login"><button id="login" type="button" class="btn disabled">Log In</button></a>
+    <a href="http://54.221.0.134/login"><button id="login" type="button" class="btn disabled">Log In</button></a>
 </div>
 
 
@@ -48,7 +48,7 @@
 </div>
 
 <div class="text-center">
-% newString =  "http://34.194.136.17/results/" + str(nextPage)
+% newString =  "http://54.221.0.134/results/" + str(nextPage)
 <a href= {{newString}}><button id="next" type="button" class="btn">>></button></a>
 </div>
 
