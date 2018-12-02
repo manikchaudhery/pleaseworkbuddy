@@ -19,36 +19,40 @@ details_url = "https://maps.googleapis.com/maps/api/place/details/json"
 
 @get('/')
 def retreive():
-    return template('layout.html')
+    return template('layout.tpl')
 
-@post("/sendRequest/<query>")
+@get("/sendRequest/<query>")
 def results(query):
-	search_payload = {"key":"AlzaSyCHwTrEzrjZ3UkUhh3X1J4XuC8ihjrJkVo", "query":query}
+	print("fuck")
+	search_payload = {"key":"AIzaSyAp4crTmwbO0APwD63f7kPFmewOTRdeo1Y", "query":"delhi", 'location': '43.66001,-79.3948'}
 	search_req = requests.get(search_url, params=search_payload)
 	search_json = search_req.json()
+	print(search_json)
 
 	place_id = search_json["results"][0]["place_id"]
 
-	details_payload = {"key":"AlzaSyCHwTrEzrjZ3UkUhh3X1J4XuC8ihjrJkVo", "placeid":place_id}
+	details_payload = {"key":"AIzaSyAp4crTmwbO0APwD63f7kPFmewOTRdeo1Y", "placeid":place_id}
 	details_resp = requests.get(details_url, params=details_payload)
 	details_json = details_resp.json()
 
 	url = details_json["result"]["url"]
-	return dumps({'result' : url})
+	#url = 'https://maps.googleapis.com/maps/api/place/textsearch/json?query=starbucks&location=44.2666,-78.3745&radius=10000&key=AIzaSyAp4crTmwbO0APwD63f7kPFmewOTRdeo1Y'
+	bottle.redirect(url)
+	return dumps({'result' : details_json})
 
-
-import twitter
-
-api = twitter.Api(consumer_key='M4qa2d6Cunkbe90qoSvEi9x1B',
-  consumer_secret='a2NnfzUkoa2fjRzGmHe9NjAJmEXwhbyTd0Gg1QjypAUGPIpV1I',
-  access_token_key='3703302855-lgDPmoN7kskZgtLLaYoTfh0ZdQAHk3Wrb2DIfCp',
-  access_token_secret='8hs6jXXMm1VbFkOgcslzaMSTIebsdFhyfEujqMkG5XaUh')
-
-#print(api.VerifyCredentials())
-
-search = api.GetSearch("happy for you")
-for tweet in search:
-    print(tweet.text)
+#
+# import twitter
+#
+# api = twitter.Api(consumer_key='M4qa2d6Cunkbe90qoSvEi9x1B',
+#   consumer_secret='a2NnfzUkoa2fjRzGmHe9NjAJmEXwhbyTd0Gg1QjypAUGPIpV1I',
+#   access_token_key='3703302855-lgDPmoN7kskZgtLLaYoTfh0ZdQAHk3Wrb2DIfCp',
+#   access_token_secret='8hs6jXXMm1VbFkOgcslzaMSTIebsdFhyfEujqMkG5XaUh')
+#
+# #print(api.VerifyCredentials())
+#
+# search = api.GetSearch("happy for you")
+# for tweet in search:
+#    # print(tweet.text)
 
 
 #
