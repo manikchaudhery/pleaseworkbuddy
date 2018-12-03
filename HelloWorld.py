@@ -159,20 +159,21 @@ def spellCheck():
 #
 # # the get method loads the home page when the server starts  and then
 # # the html form called in object template, redirects to the post method
-# @get('/')
-# def getMethod():
-#     # using the global signed in variable here
-#     global userSignedIn
-#     global counter
-#
-#
-#     if userSignedIn:
-#         counter += 1
-#         print(counter)
-#         bottle.redirect("http://localhost:8080/login")
-#
-#     # if user is already logged in
-#     return template("object")
+@get('/')
+def getMethod():
+    print(choices)
+    # using the global signed in variable here
+    # global userSignedIn
+    # global counter
+    #
+    #
+    # if userSignedIn:
+    #     counter += 1
+    #     print(counter)
+    #     bottle.redirect("http://localhost:8080/login")
+
+    # if user is already logged in
+    return template("object", choices=choices)
 #
 # # this method enables the counting of words in results
 # @post('/')
@@ -528,10 +529,10 @@ def spellCheck():
 #     bottle.redirect("http://localhost:8080/")
 #
 # # enables search engine logo to be displayed
-# @route('/static/<filename>')
-# def server_static(filename):
-#     return static_file(filename, root='./views/myfiles')
-#
+@route('/static/<filename>')
+def server_static(filename):
+    return static_file(filename, root='./views/myfiles')
+
 #
 # # the function counts the number of words and appends them to the dictionary
 # # for result and history table
@@ -557,14 +558,14 @@ def spellCheck():
 # starting the server
 if __name__ == '__main__':
 
-	#retreiving the database
-	cursor = lexiconDB.find({})
+    #retreiving the database
+    cursor = lexiconDB.find({})
 
-	for document in cursor:
-		choices.append(document['word'])
-	print(choices)
+    for document in cursor:
+        choices.append(document['word'])
 
-	print(process.extract("engneers", choices))
+    newChoices = (process.extract("engneers", choices))
 
-	run(host='localhost', port=8080)
+
+    run(host='localhost', port=8080)
 
