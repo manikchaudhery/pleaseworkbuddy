@@ -10,6 +10,19 @@ import httplib2
 import requests
 from paginator import finder
 
+import creatingGlobalDicts
+from queryOperations import getDocIDsDict
+from queryOperations import getDescription
+from queryOperations import get_sorted_titles
+from queryOperations import get_sorted_urls
+from queryOperations import get_sorted_descriptions
+
+word_to_wordID = creatingGlobalDicts.get_lexicon_DB()
+wordID_to_docIDs = creatingGlobalDicts.get_invertedIndex_DB()
+docID_to_pageRank = creatingGlobalDicts.get_pageRank_DB()
+docID_to_url = creatingGlobalDicts.get_docIndex_DB()
+docID_to_title = creatingGlobalDicts.get_titles_DB()
+docID_to_description = creatingGlobalDicts.get_description_DB()
 
 
 # the following is the dictionary that keeps a record of the top twenty words
@@ -17,7 +30,12 @@ topOccurences = dict()
 userHistory = dict()
 topOccurences = dict()
 userHistory = dict()
+
+orderedDocIds = list()
+titlesSorted = list()
 docsSorted = list()
+descriptionsSorted = list()
+
 results_per_page = 5
 page = 1
 firstWord = str()
@@ -58,7 +76,11 @@ def getMethod():
 @post('/')
 def index():
     global userSignedIn
+
+    global titlesSorted
     global docsSorted
+    global descriptionsSorted
+
     global firstWord
     global pagesNeeded
     occurencesList = []
@@ -82,12 +104,21 @@ def index():
     picture_name = "logo_transparent.png"
     if (searchSentence != None):
         firstWord = searchSentence.lower().split()[0]
-        docsSorted = finder(firstWord)
+
+        orderedDocIds = getDocIDsDict(firstWord, word_to_wordID, wordID_to_docIDs, docID_to_pageRank)
+        titlesSorted = get_sorted_titles(orderedDocIds, docID_to_title, docID_to_url)
+        print "IN INDEX: Titles Sorted", titlesSorted
+        docsSorted = get_sorted_urls(orderedDocIds, docID_to_url)
+        
+        descrByQuery = getDescription(firstWord, docID_to_description)
+        descriptionsSorted = get_sorted_descriptions(orderedDocIds, descrByQuery)
+
         if (docsSorted == 0):
             bottle.redirect("http://localhost:8080/urlNonExistent")
         if len(docsSorted) <= 5:
-            return template('index', occurences=occurencesList,
-                            picture=picture_name, searchSentence=searchSentence, urlsList=docsSorted)
+            return template('index', occurences=occurencesList, firstWord=firstWord,
+                            picture=picture_name, searchSentence=searchSentence, 
+                            titlesList=titlesSorted, urlsList=docsSorted, descriptionList=descriptionsSorted)
         else:
             remainder = len(docsSorted) % 5
             print('remainder is: ', remainder)
@@ -111,7 +142,10 @@ def index():
 
 @get('/results/<pageNumber>')
 def displayResults(pageNumber):
+    global titlesSorted
     global docsSorted
+    global descriptionsSorted
+
     global page
     global results_per_page
     global firstWord
@@ -124,7 +158,6 @@ def displayResults(pageNumber):
 
     currentPage = int(pageNumber)
     print("earlier current page number is: ", currentPage)
-
     if(docsSorted == 0):
         bottle.redirect("http://localhost:8080/urlNonExistent")
     nextPage = 0
@@ -133,12 +166,23 @@ def displayResults(pageNumber):
     lowerCount = 0
     newdocs = list()
     reip = 1
-    while reip <= pagesNeeded:
 
+    listOfListsTitles = []
+    listOfLists = []
+    listOfListsDescriptions = []
+
+    print "Titles Sorted", titlesSorted
+    while reip <= pagesNeeded:
+        newListTitles = titlesSorted[lowerCount:upperCount]
         newList = docsSorted[lowerCount:upperCount]
+        newListDescriptions = descriptionsSorted[lowerCount:upperCount]
         #print('printing new list: ')
         #print(newList)
+
+        listOfListsTitles.append(newListTitles)
         listOfLists.append(newList)
+        listOfListsDescriptions.append(newListDescriptions)
+
         lowerCount = upperCount
         upperCount += 5
         reip += 1
@@ -146,29 +190,29 @@ def displayResults(pageNumber):
     #print(listOfLists)
     #print(lowerCount)
     #print(upperCount)
+
+    newTitles = listOfListsTitles[currentPage-1]
+    print "New Titles", newTitles
     newdocs = listOfLists[currentPage-1]
+    newDescriptions = listOfListsDescriptions[currentPage-1]
 
     if currentPage == pagesNeeded:
         nextPage = pagesNeeded
         picture_name = "logo_transparent.png"
         #print('pages needed is: ', pagesNeeded)
         previousPage = currentPage - 1
-        return template('noNextButton', previousPage=previousPage,
-                        picture=picture_name, urlsList=newdocs, currentPage=currentPage, listOfLists=listOfLists,
-                        pagesNeeded=pagesNeeded)
-
-
-
-
+        return template('noNextButton', previousPage=previousPage, picture=picture_name, firstWord=firstWord,
+                        titlesList=newTitles, urlsList=newdocs, descriptionList=newDescriptions,
+                        currentPage=currentPage, listOfLists=listOfLists, pagesNeeded=pagesNeeded)
 
     if currentPage == 1:
         previousPage = 1
         nextPage = currentPage + 1
         picture_name = "logo_transparent.png"
         #print('pages needed is: ', pagesNeeded)
-        return template('noPreviousButton', nextPage=nextPage,
-                        picture=picture_name, urlsList=newdocs, currentPage=currentPage, listOfLists=listOfLists,
-                        pagesNeeded=pagesNeeded)
+        return template('noPreviousButton', nextPage=nextPage, picture=picture_name, firstWord=firstWord,
+                        titlesList=newTitles, urlsList=newdocs, descriptionList=newDescriptions,
+                        currentPage=currentPage, listOfLists=listOfLists, pagesNeeded=pagesNeeded)
 
     nextPage = currentPage + 1
 
@@ -177,11 +221,9 @@ def displayResults(pageNumber):
 
     picture_name = "logo_transparent.png"
     #print('pages needed is: ', pagesNeeded)
-    return template('newIndex', nextPage=nextPage, previousPage=previousPage,
-                    picture=picture_name, urlsList=newdocs, currentPage=currentPage, listOfLists=listOfLists, pagesNeeded=pagesNeeded)
-
-
-
+    return template('newIndex', nextPage=nextPage, previousPage=previousPage, picture=picture_name, 
+                    firstWord=firstWord, titlesList=newTitles, urlsList=newdocs, descriptionList=newDescriptions,
+                    currentPage=currentPage, listOfLists=listOfLists, pagesNeeded=pagesNeeded)
 
 #following oauth google documentation
 @get('/login')
@@ -288,12 +330,22 @@ def displayResults():
     picture_name = "logo_transparent.png"
     if (searchSentence != None):
         firstWord = searchSentence.lower().split()[0]
-        docsSorted = finder(firstWord)
+
+        orderedDocIds = getDocIDsDict(firstWord, word_to_wordID, wordID_to_docIDs, docID_to_pageRank)
+        titlesSorted = get_sorted_titles(orderedDocIds, docID_to_title, docID_to_url)
+        docsSorted = get_sorted_urls(orderedDocIds, docID_to_url)
+        
+        descrByQuery = getDescription(firstWord, docID_to_description)
+        descriptionsSorted = get_sorted_descriptions(orderedDocIds, descrByQuery)
+
+        #docsSorted = finder(firstWord)
         if (docsSorted == 0):
             bottle.redirect("http://localhost:8080/urlNonExistent")
         if len(docsSorted) <= 5:
             return template('loggedInResults',
-                            picture=picture_name, searchSentence=searchSentence, urlsList=docsSorted, user_email=user_email)
+                            picture=picture_name, searchSentence=searchSentence, 
+                            titlesList=titlesSorted, urlsList=docsSorted, descriptionList=descriptionsSorted, 
+                            user_email=user_email)
         else:
             remainder = len(docsSorted) % 5
             print('remainder is: ', remainder)

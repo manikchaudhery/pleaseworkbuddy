@@ -31,9 +31,13 @@
 			<tr>
 				<th>URL</th>
 			</tr>
-				% for item in urlsList:
+				% for iter in range(len(urlsList)):
 					<tr>
-						<td><a href="{{item}}">{{item}}</a></td>
+						<td>
+							<p>{{titlesList[iter]}}</p>
+							<p><a href="{{urlsList[iter]}}">{{urlsList[iter]}}</a></p>
+							<p>{{descriptionList[iter]}}</p>
+						</td>
 						% i = i+1
 					</tr>
 				% end

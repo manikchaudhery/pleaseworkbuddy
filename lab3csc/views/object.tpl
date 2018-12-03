@@ -6,17 +6,30 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 
-<div class = text-center>
-	<img src="static/logo_transparent.png" height="200" width="200">
-	<a href="http://localhost:8080/login"><button id="login" type="button" class="btn">Log In</button></a>
-</div>
+<body style="background-color:black;">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4"></div>
+			<div class="col-md-4">
+				<div class="text-center">
+					<img src="static/logo_transparent.png" height="200" width="200">
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="text-center">
+					<br>
+				    <a href="http://localhost:8080/login"><button id="login" type="button" class="btn btn-primary">Log In</button></a>
+				</div>
+			</div>
+		</div>
 
-
-<form action="/" method="post" class="col-lg-6 offset-lg-3 ">
-	<div class="row justify-content-center">
-		<input name="search" type="text" placeholder="Enter query" />
-		<span class="input-group-btn">
-			<input class="btn btn-primary mb-2" value="Search" type="submit" />
-		</span>
+		<form action="/" method="post" class="col-lg-6 offset-lg-3 ">
+			<div class="row justify-content-center">
+				<input name="search" type="text" placeholder="Enter query" />
+				<span class="input-group-btn">
+					<input class="btn btn-primary mb-2" value="Search" type="submit" />
+				</span>
+			</div>
+		</form>
 	</div>
-</form>
+</body>
