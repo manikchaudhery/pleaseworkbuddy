@@ -83,8 +83,9 @@ input[type=submit] {
 	<div class="col-md-4">
 		<div class="text-center">
 			<br>
-		    <a href="http://localhost:8080/login"><button id="login" type="button" class="btn btn-primary">Log In</button></a>
-		    <a href="http://localhost:8080/maps"><button id="place" type="button" class="btn btn-primary">Search On Map</button></a>
+      % newIp = IP_ADDRESS
+		    <a href={{"http://" + IP_ADDRESS + "/login"}}><button id="login" type="button" class="btn btn-primary">Log In</button></a>
+		    <a href={{"http://" + IP_ADDRESS + "/maps"}}><button id="place" type="button" class="btn btn-primary">Search On Map</button></a>
 		</div>
 	</div>
 </div>

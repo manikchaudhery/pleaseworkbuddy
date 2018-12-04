@@ -80,11 +80,11 @@ input[type=submit] {
 		</div>
 	</div>
 	<div class="col-md-4">
-		<div class="text-center">
-			<br>
-		    <a href="http://localhost:8080/login"><button id="login" type="button" class="btn btn-primary">Log In</button></a>
-		    <a href="http://localhost:8080/maps"><button id="place" type="button" class="btn btn-primary">Search On Map</button></a>
-		</div>
+        <div class="text-center">
+          <br>
+            <a href={{"http://" + IP_ADDRESS + "/login"}}><button id="login" type="button" class="btn btn-primary">Log In</button></a>
+            <a href={{"http://" + IP_ADDRESS + "/maps"}}><button id="place" type="button" class="btn btn-primary">Search On Map</button></a>
+        </div>
 	</div>
 </div>
 
@@ -119,7 +119,7 @@ input[type=submit] {
 				% end
 		</table>
 		<div class="text-center">
-        	% newPrevString =  "http://localhost:8080/results/" + str(previousPage)
+        	% newPrevString =  "http://" + IP_ADDRESS + "/results/" + str(previousPage)
         	<a href={{newPrevString}}><button id="previous" type="button" class="btn"><<</button></a>
         	<h5><kbd>Page {{currentPage}} of {{pagesNeeded}}</kbd></h5>
 		</div>

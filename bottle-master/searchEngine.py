@@ -9,6 +9,9 @@ from googleapiclient.discovery import build
 import json
 import httplib2
 
+import sys
+IP_ADDRESS = sys.argv[1]
+
 import twitter
 from newsapi import NewsApiClient
 import unicodedata
@@ -163,9 +166,10 @@ details_url = "https://maps.googleapis.com/maps/api/place/details/json"
 @get('/maps')
 def retreive():
     global shouldSearchMap
+    global IP_ADDRESS
     shouldSearchMap = True
     print('/maps: ', shouldSearchMap)
-    return template('layout.tpl')
+    return template('layout.tpl', IP_ADDRESS=IP_ADDRESS)
 
 @get("/sendRequest")
 def results():
@@ -267,6 +271,7 @@ def getMethod():
     global userSignedIn
     global counter
     global shouldSearchMap
+    global IP_ADDRESS
 
     shouldSearchMap = False
 
@@ -274,10 +279,10 @@ def getMethod():
     if userSignedIn:
         counter += 1
         print(counter)
-        bottle.redirect("http://localhost:8080/login")
+        bottle.redirect("http://" + IP_ADDRESS + "/login")
 
     # if user is already logged in
-    return template("object")
+    return template("object", IP_ADDRESS=IP_ADDRESS)
 
 # this method enables the counting of words in results
 @post('/')
@@ -296,6 +301,7 @@ def index():
     global descriptionsSorted
     global shouldSearchMap
     global searchMapString
+    global IP_ADDRESS
 
     print('post /: ', shouldSearchMap)
 
@@ -314,7 +320,7 @@ def index():
         if shouldSearchMap:
             searchMapString = searchSentence
             print('Im here')
-            bottle.redirect("http://localhost:8080/sendRequest")
+            bottle.redirect("http://" + IP_ADDRESS + "/sendRequest")
         searchSentence = searchSentence.lower()
         occurences = countNumberOfWords(searchSentence)
 
@@ -329,7 +335,7 @@ def index():
 
         orderedDocIds = getDocIDsDict(firstWord, word_to_wordID, wordID_to_docIDs, docID_to_pageRank)
         if len(orderedDocIds) == 0:
-            bottle.redirect('http://localhost:8080/urlNonExistent')
+            bottle.redirect('http://" + IP_ADDRESS + "/urlNonExistent')
         titlesSorted = get_sorted_titles(orderedDocIds, docID_to_title, docID_to_url)
         docsSorted = get_sorted_urls(orderedDocIds, docID_to_url)
 
@@ -341,10 +347,10 @@ def index():
         newsArticles(firstWord)
         docsSorted = finder(firstWord)
         if (docsSorted == 0):
-            bottle.redirect("http://localhost:8080/urlNonExistent")
+            bottle.redirect("http://" + IP_ADDRESS + "/urlNonExistent")
         if len(docsSorted) <= 5:
             print('lenghthidouevbibev is ', len(newsArticlesHeadlines))
-            return template('index', occurences=occurencesList, firstWord=firstWord,
+            return template('index', occurences=occurencesList, firstWord=firstWord, IP_ADDRESS=IP_ADDRESS,
                             picture=picture_name, searchSentence=searchSentence, urlsList=docsSorted, userTweets=userTweets,
                             twitterUsers=twitterUsers, newsArticlesHeadlines=newsArticlesHeadlines,
                             newsArticlesDescription=newsArticlesDescription, newsArticlesPublishedAt=newsArticlesPublishedAt,
@@ -361,13 +367,13 @@ def index():
                 print('ithe')
                 pagesNeeded = (len(docsSorted) // 5) + 1
                 print(pagesNeeded)
-            newURl = "http://localhost:8080/results/1"
+            newURl = "http://" + IP_ADDRESS + "/results/1"
             bottle.redirect(newURl)
 
     if(docsSorted == 0):
-        bottle.redirect("http://localhost:8080/urlNonExistent")
+        bottle.redirect("http://" + IP_ADDRESS + "/urlNonExistent")
 
-    return template('index',
+    return template('index', IP_ADDRESS=IP_ADDRESS,
                     picture=picture_name, urlsList=docsSorted)
 
 @get('/results/<pageNumber>')
@@ -386,6 +392,7 @@ def displayResults(pageNumber):
     global upperCount
     global lowerCount
     global currentPage
+    global IP_ADDRESS
     listOfLists = list()
 
     getTweet(firstWord)
@@ -396,7 +403,7 @@ def displayResults(pageNumber):
     print("earlier current page number is: ", currentPage)
 
     if(docsSorted == 0):
-        bottle.redirect("http://localhost:8080/urlNonExistent")
+        bottle.redirect("http://" + IP_ADDRESS + "/urlNonExistent")
     nextPage = 0
     previousPage = 0
     upperCount = 5
@@ -437,7 +444,7 @@ def displayResults(pageNumber):
         picture_name = "logo_transparent.png"
         #print('pages needed is: ', pagesNeeded)
         previousPage = currentPage - 1
-        return template('noNextButton', previousPage=previousPage, firstWord = firstWord,
+        return template('noNextButton', previousPage=previousPage, firstWord = firstWord, IP_ADDRESS=IP_ADDRESS,
                         picture=picture_name, urlsList=newdocs, currentPage=currentPage, listOfLists=listOfLists,
                         pagesNeeded=pagesNeeded, titlesList=newTitles, userTweets=userTweets,
                         twitterUsers=twitterUsers, newsArticlesHeadlines=newsArticlesHeadlines,
@@ -453,7 +460,7 @@ def displayResults(pageNumber):
         nextPage = currentPage + 1
         picture_name = "logo_transparent.png"
         #print('pages needed is: ', pagesNeeded)
-        return template('noPreviousButton', nextPage=nextPage, firstWord = firstWord,
+        return template('noPreviousButton', nextPage=nextPage, firstWord = firstWord, IP_ADDRESS=IP_ADDRESS,
                         picture=picture_name, urlsList=newdocs, currentPage=currentPage, listOfLists=listOfLists,
                         pagesNeeded=pagesNeeded, titlesList=newTitles, userTweets=userTweets,
                         twitterUsers=twitterUsers, newsArticlesHeadlines=newsArticlesHeadlines,
@@ -467,7 +474,7 @@ def displayResults(pageNumber):
 
     picture_name = "logo_transparent.png"
     #print('pages needed is: ', pagesNeeded)
-    return template('newIndex', nextPage=nextPage, previousPage=previousPage, firstWord = firstWord,
+    return template('newIndex', nextPage=nextPage, previousPage=previousPage, firstWord = firstWord, IP_ADDRESS=IP_ADDRESS,
                         picture=picture_name, urlsList=newdocs, currentPage=currentPage, listOfLists=listOfLists,
                         pagesNeeded=pagesNeeded, titlesList=newTitles, userTweets=userTweets,
                         twitterUsers=twitterUsers, newsArticlesHeadlines=newsArticlesHeadlines,
@@ -484,7 +491,7 @@ def login():
     userSignedIn = True
 
     flow = flow_from_clientsecrets("client_secret.json",
-                                   redirect_uri="http://localhost:8080/redirect",
+                                   redirect_uri="http://" + IP_ADDRESS + "/redirect",
                                    scope='https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email'
                                    )
     uri = flow.step1_get_authorize_url()
@@ -492,7 +499,8 @@ def login():
 
 @get('/urlNonExistent')
 def urlNonExistent():
-    return template('error')
+    global IP_ADDRESS
+    return template('error', IP_ADDRESS = IP_ADDRESS)
 
 #user gets here when logged in
 @get('/redirect')
@@ -500,7 +508,7 @@ def redirect_page():
     global userSignedIn
 
     if not userSignedIn:
-        bottle.redirect("http://localhost:8080/")
+        bottle.redirect("http://" + IP_ADDRESS + "/")
     code = request.query.get('code', '')
 
 
@@ -516,7 +524,7 @@ def redirect_page():
     scope = 'https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email'
 
     flow = OAuth2WebServerFlow(client_id=client_id, client_secret=client_secret, scope=scope,
-                               redirect_uri="http://localhost:8080/redirect")
+                               redirect_uri="http://" + IP_ADDRESS + "/redirect")
     credentials = flow.step2_exchange(code)
     token = credentials.id_token['sub']
 
@@ -597,7 +605,7 @@ def displayResults():
         firstWord = searchSentence.lower().split()[0]
         orderedDocIds = getDocIDsDict(firstWord, word_to_wordID, wordID_to_docIDs, docID_to_pageRank)
         if len(orderedDocIds) == 0:
-            bottle.redirect('http://localhost:8080/urlNonExistent')
+            bottle.redirect('http://" + IP_ADDRESS + "/urlNonExistent')
         titlesSorted = get_sorted_titles(orderedDocIds, docID_to_title, docID_to_url)
         docsSorted = get_sorted_urls(orderedDocIds, docID_to_url)
 
@@ -608,13 +616,13 @@ def displayResults():
         newsArticles(firstWord)
         docsSorted = finder(firstWord)
         if (docsSorted == 0):
-            bottle.redirect("http://localhost:8080/urlNonExistent")
+            bottle.redirect("http://" + IP_ADDRESS + "/urlNonExistent")
         if len(docsSorted) <= 5:
             return template('loggedInResults',
                             picture=picture_name, searchSentence=searchSentence, urlsList=docsSorted, user_email=user_email,  userTweets=userTweets,
                             twitterUsers=twitterUsers, newsArticlesHeadlines=newsArticlesHeadlines,
                             newsArticlesDescription=newsArticlesDescription, newsArticlesPublishedAt=newsArticlesPublishedAt,
-                            newsArticlesImage=newsArticlesImage, descriptionList=descriptionsSorted, titlesList=titlesSorted, firstWord=firstWord)
+                            newsArticlesImage=newsArticlesImage, descriptionList=descriptionsSorted, titlesList=titlesSorted)
         else:
             remainder = len(docsSorted) % 5
             print('remainder is: ', remainder)
@@ -627,11 +635,11 @@ def displayResults():
                 print('ithe')
                 pagesNeeded = (len(docsSorted) // 5) + 1
                 print(pagesNeeded)
-            newURl = "http://localhost:8080/resultsLoggedIn/1"
+            newURl = "http://" + IP_ADDRESS + "/resultsLoggedIn/1"
             bottle.redirect(newURl)
 
     if(docsSorted == 0):
-        bottle.redirect("http://localhost:8080/urlNonExistent")
+        bottle.redirect("http://" + IP_ADDRESS + "/urlNonExistent")
 
 
 @get('/resultsLoggedIn/<pageNumber>')
@@ -660,7 +668,7 @@ def displayResults(pageNumber):
     print("earlier current page number is: ", currentPage)
 
     if(docsSorted == 0):
-        bottle.redirect("http://localhost:8080/urlNonExistent")
+        bottle.redirect("http://" + IP_ADDRESS + "/urlNonExistent")
     nextPage = 0
     previousPage = 0
     upperCount = 5
@@ -732,7 +740,7 @@ def displayResults(pageNumber):
 
     picture_name = "logo_transparent.png"
     print('pages needed is: ', pagesNeeded)
-    return template('newLoggedInResults', nextPage=nextPage, previousPage=previousPage, firstWord=firstWord,
+    return template('newLoggedInResults', nextPage=nextPage, previousPage=previousPage, firstWord = firstWord,
                         picture=picture_name, urlsList=newdocs, currentPage=currentPage, listOfLists=listOfLists,
                         pagesNeeded=pagesNeeded, titlesList=newTitles, userTweets=userTweets,
                         twitterUsers=twitterUsers, newsArticlesHeadlines=newsArticlesHeadlines,
@@ -757,7 +765,7 @@ def logout():
     global userSignedIn
     userSignedIn = False
 
-    bottle.redirect("http://localhost:8080/")
+    bottle.redirect("http://" + IP_ADDRESS + "/")
 
 # enables search engine logo to be displayed
 @route('/static/<filename>')
@@ -795,4 +803,4 @@ if __name__ == '__main__':
     for document in cursor:
         choices.append(document['word'])
 
-    run(host='localhost', port=8080)
+    run(host=IP_ADDRESS, port=80)
