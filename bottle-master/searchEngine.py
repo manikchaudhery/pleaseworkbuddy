@@ -230,10 +230,10 @@ def getTweet(query):
 #retrieve news data
 
 def newsArticles(topic):
-    newsArticlesDescription.append("test")
-    newsArticlesHeadlines.append("test")
-    newsArticlesPublishedAt.append("test")
-    newsArticlesImage.append("test")
+    newsArticlesDescription.append("AWS Incompatible with the News API, Please check on LocalHost")
+    newsArticlesHeadlines.append("AWS Incompatible with the News API, Please check on LocalHost")
+    newsArticlesPublishedAt.append("AWS Incompatible with the News API, Please check on LocalHost")
+    newsArticlesImage.append("AWS Incompatible with the News API, Please check on LocalHost")
     return
 
     global newsArticlesHeadlines
