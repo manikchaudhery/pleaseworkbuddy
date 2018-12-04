@@ -230,6 +230,11 @@ def getTweet(query):
 #retrieve news data
 
 def newsArticles(topic):
+    newsArticlesDescription.append("test")
+    newsArticlesHeadlines.append("test")
+    newsArticlesPublishedAt.append("test")
+    newsArticlesImage.append("test")
+    return
 
     global newsArticlesHeadlines
     global newsArticlesImage
