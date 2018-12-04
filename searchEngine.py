@@ -29,7 +29,6 @@ import boto.ec2
 
 import requests
 from json import dumps
-import imghdr
 
 #library to implement leveinstein
 from fuzzywuzzy import process
