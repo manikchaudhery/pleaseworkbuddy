@@ -614,7 +614,7 @@ def displayResults():
                             picture=picture_name, searchSentence=searchSentence, urlsList=docsSorted, user_email=user_email,  userTweets=userTweets,
                             twitterUsers=twitterUsers, newsArticlesHeadlines=newsArticlesHeadlines,
                             newsArticlesDescription=newsArticlesDescription, newsArticlesPublishedAt=newsArticlesPublishedAt,
-                            newsArticlesImage=newsArticlesImage, descriptionList=descriptionsSorted, titlesList=titlesSorted)
+                            newsArticlesImage=newsArticlesImage, descriptionList=descriptionsSorted, titlesList=titlesSorted, firstWord=firstWord)
         else:
             remainder = len(docsSorted) % 5
             print('remainder is: ', remainder)
@@ -732,7 +732,7 @@ def displayResults(pageNumber):
 
     picture_name = "logo_transparent.png"
     print('pages needed is: ', pagesNeeded)
-    return template('newLoggedInResults', nextPage=nextPage, previousPage=previousPage, firstWord = firstWord,
+    return template('newLoggedInResults', nextPage=nextPage, previousPage=previousPage, firstWord=firstWord,
                         picture=picture_name, urlsList=newdocs, currentPage=currentPage, listOfLists=listOfLists,
                         pagesNeeded=pagesNeeded, titlesList=newTitles, userTweets=userTweets,
                         twitterUsers=twitterUsers, newsArticlesHeadlines=newsArticlesHeadlines,
