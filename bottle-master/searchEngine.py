@@ -801,4 +801,4 @@ if __name__ == '__main__':
     for document in cursor:
         choices.append(document['word'])
     global IP_ADDRESS
-    run(host=IP_ADDRESS, port=80)
+    run(host='0.0.0.0', port=80)
