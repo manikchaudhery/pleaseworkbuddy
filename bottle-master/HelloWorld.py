@@ -42,7 +42,7 @@ def getMethod():
     if userSignedIn:
         counter += 1
         print(counter)
-        bottle.redirect("http://34.194.136.17/login")
+        bottle.redirect("http://localhost:8080/login")
 
     # if user is already logged in
     return template("object")
@@ -74,10 +74,10 @@ def index():
     if (searchSentence != None):
         firstWord = searchSentence.lower().split()[0]
         docsSorted = finder(firstWord)
-        bottle.redirect("http://34.194.136.17/results")
+        bottle.redirect("http://localhost:8080/results")
 
     if(docsSorted == 0):
-        bottle.redirect("http://34.194.136.17/urlNonExistent")
+        bottle.redirect("http://localhost:8080/urlNonExistent")
 
     return template('index', occurences=occurencesList,
                     picture=picture_name, searchSentence=searchSentence, urlsList=number)
@@ -93,7 +93,7 @@ def login():
     userSignedIn = True
 
     flow = flow_from_clientsecrets("client_secret.json",
-                                   redirect_uri="http://34.194.136.17/redirect",
+                                   redirect_uri="http://localhost:8080/redirect",
                                    scope='https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email'
                                    )
     uri = flow.step1_get_authorize_url()
@@ -105,7 +105,7 @@ def redirect_page():
     global userSignedIn
 
     if not userSignedIn:
-        bottle.redirect("http://34.194.136.17/")
+        bottle.redirect("http://localhost:8080/")
     code = request.query.get('code', '')
 
 
@@ -121,7 +121,7 @@ def redirect_page():
     scope = 'https://www.googleapis.com/auth/plus.me https://www.googleapis.com/auth/userinfo.email'
 
     flow = OAuth2WebServerFlow(client_id=client_id, client_secret=client_secret, scope=scope,
-                               redirect_uri="http://34.194.136.17/redirect")
+                               redirect_uri="http://localhost:8080/redirect")
     credentials = flow.step2_exchange(code)
     token = credentials.id_token['sub']
 
@@ -198,7 +198,7 @@ def logout():
     global userSignedIn
     userSignedIn = False
 
-    bottle.redirect("http://34.194.136.17/")
+    bottle.redirect("http://localhost:8080/")
 
 # enables search engine logo to be displayed
 @route('/static/<filename>')
@@ -401,10 +401,10 @@ def displayResults():
 			<input name="search" id="submit" type="submit" class="btn" value="Go"></input>'''
 
     if userSignedIn:
-        output += '''<a href="http://34.194.136.17/logout"><button id="login" type="button" class="btn">Log Out</button></a><h2 id="toptext">''' + str(
+        output += '''<a href="http://localhost:8080/logout"><button id="login" type="button" class="btn">Log Out</button></a><h2 id="toptext">''' + str(
             request.get_cookie("email")) + '''</h2>'''
     else:
-        output += '''<a href="http://34.194.136.17/login"><button id="login" type="button" class="btn">Log In</button></a>'''
+        output += '''<a href="http://localhost:8080/login"><button id="login" type="button" class="btn">Log In</button></a>'''
 
     output += '''</form></div><div class="main"><h2 id="title">Results for "''' + firstWord + '''":</h2>''';
 

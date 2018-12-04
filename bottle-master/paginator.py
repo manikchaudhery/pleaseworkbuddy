@@ -58,3 +58,4 @@ def finder(word = ""):
 
     return len(sortedRankingsList)
 
+
