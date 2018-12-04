@@ -37,8 +37,6 @@ docID_to_description = creatingGlobalDicts.get_description_DB()
 
 import requests
 
-import boto.ec2
-
 # from boto.manage.cmdhsell import sshclient_from_instance
 #
 # conn= boto.ec2.connect_to_region("us-east-1")
