@@ -18,7 +18,6 @@ import unicodedata
 
 import requests
 
-import boto.ec2
 
 # from boto.manage.cmdhsell import sshclient_from_instance
 #
