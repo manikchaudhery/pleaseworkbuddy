@@ -230,11 +230,6 @@ def getTweet(query):
 #retrieve news data
 
 def newsArticles(topic):
-    newsArticlesDescription.append("AWS Incompatible with the News API, Please check on LocalHost")
-    newsArticlesHeadlines.append("AWS Incompatible with the News API, Please check on LocalHost")
-    newsArticlesPublishedAt.append("AWS Incompatible with the News API, Please check on LocalHost")
-    newsArticlesImage.append("AWS Incompatible with the News API, Please check on LocalHost")
-    return
 
     global newsArticlesHeadlines
     global newsArticlesImage
@@ -755,6 +750,10 @@ def displayResults(pageNumber):
 
 @error(404)
 def error404(error):
+    return template('error')
+
+@error(500)
+def error500(error):
     return template('error')
 
 #defines the logout method
