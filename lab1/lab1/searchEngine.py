@@ -92,6 +92,9 @@ newsArticlesImage = []
 newsArticlesPublishedAt = []
 newsArticlesDescription = []
 
+searchMapString = ''
+shouldSearchMap = False
+
 
 
 session_opts = {
@@ -159,26 +162,30 @@ details_url = "https://maps.googleapis.com/maps/api/place/details/json"
 
 @get('/maps')
 def retreive():
+    global shouldSearchMap
+    shouldSearchMap = True
     return template('layout.tpl')
 
-@get("/sendRequest/<query>")
-def results(query):
+@get("/sendRequest")
+def results():
+    global searchMapString
+    searchSentence = searchMapString
+    print(searchSentence)
+    search_payload = {"key":"AIzaSyAp4crTmwbO0APwD63f7kPFmewOTRdeo1Y", "query":str(searchSentence), 'location': '43.66001,-79.3948'}
+    search_req = requests.get(search_url, params=search_payload)
+    search_json = search_req.json()
+    print(search_json)
 
-	search_payload = {"key":"AIzaSyAp4crTmwbO0APwD63f7kPFmewOTRdeo1Y", "query":"delhi", 'location': '43.66001,-79.3948'}
-	search_req = requests.get(search_url, params=search_payload)
-	search_json = search_req.json()
-	print(search_json)
+    place_id = search_json["results"][0]["place_id"]
 
-	place_id = search_json["results"][0]["place_id"]
+    details_payload = {"key":"AIzaSyAp4crTmwbO0APwD63f7kPFmewOTRdeo1Y", "placeid":place_id}
+    details_resp = requests.get(details_url, params=details_payload)
+    details_json = details_resp.json()
 
-	details_payload = {"key":"AIzaSyAp4crTmwbO0APwD63f7kPFmewOTRdeo1Y", "placeid":place_id}
-	details_resp = requests.get(details_url, params=details_payload)
-	details_json = details_resp.json()
-
-	url = details_json["result"]["url"]
-	#url = 'https://maps.googleapis.com/maps/api/place/textsearch/json?query=starbucks&location=44.2666,-78.3745&radius=10000&key=AIzaSyAp4crTmwbO0APwD63f7kPFmewOTRdeo1Y'
-	bottle.redirect(url)
-	return dumps({'result' : details_json})
+    url = details_json["result"]["url"]
+    #url = 'https://maps.googleapis.com/maps/api/place/textsearch/json?query=starbucks&location=44.2666,-78.3745&radius=10000&key=AIzaSyAp4crTmwbO0APwD63f7kPFmewOTRdeo1Y'
+    bottle.redirect(url)
+    return dumps({'result' : details_json})
 
 
 #retrieve twitter data
@@ -279,6 +286,10 @@ def index():
     global titlesSorted
 
     global descriptionsSorted
+    global shouldSearchMap
+    global searchMapString
+
+
 
     occurencesList = []
     sortedTopTwentyDictionary = dict()
@@ -290,6 +301,11 @@ def index():
 
     # making sure not to pass in an empty string
     if (searchSentence != None):
+        if shouldSearchMap:
+            searchMapString = searchSentence
+            print('Im here')
+            shouldSearchMap = False
+            bottle.redirect("http://localhost:8080/sendRequest")
         searchSentence = searchSentence.lower()
         occurences = countNumberOfWords(searchSentence)
 

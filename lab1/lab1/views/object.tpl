@@ -82,14 +82,14 @@ input[type=submit] {
 			<div class="col-md-4"></div>
 			<div class="col-md-4">
 				<div class="text-center">
-					<img src="static/logo_transparent.png" height="200" width="200">
+					<img src="https://i.ibb.co/vLHVMLr/logo-transparent.jpg" height="200" width="200">
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="text-center">
 					<br>
 				    <a href="http://localhost:8080/login"><button id="login" type="button" class="btn btn-primary">Log In</button></a>
-				    <a href="http://localhost:8080/login"><button id="login" type="button" class="btn btn-primary">Search Place</button></a>
+				    <a href="http://localhost:8080/maps"><button id="place" type="button" class="btn btn-primary">Search On Map</button></a>
 				</div>
 			</div>
 		</div>
