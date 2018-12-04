@@ -75,7 +75,7 @@ input[type=submit] {
   </head>
   <body style="background-color:black;">
 <div class="container-fluid">
-<a href="http://localhost:8080/"><button id="place" type="button" class="btn btn-primary">Back To Search</button></a>
+<a href={{"http://" + IP_ADDRESS + "/"}}><button id="place" type="button" class="btn btn-primary">Back To Search</button></a>
     <div class="row">
 	<div class="col-md-4"></div>
 	<div class="col-md-4">
@@ -86,7 +86,7 @@ input[type=submit] {
 	<div class="col-md-4">
 		<div class="text-center">
 			<br>
-		    <a href="http://localhost:8080/login"><button id="login" type="button" class="btn btn-primary">Log In</button></a>
+		    <a href={{"http://" + IP_ADDRESS + "/"}}><button id="login" type="button" class="btn btn-primary">Log In</button></a>
 		</div>
 	</div>
     </div>
